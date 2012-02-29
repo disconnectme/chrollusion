@@ -1,0 +1,12 @@
+{
+ "%d downloads": {
+  "one": "Un téléchargement", 
+  "other": "%d téléchargements"
+ }, 
+ "Translated": "Oui", 
+ "downloadsCount": {
+  "one": "Un téléchargement", 
+  "other": "%d téléchargements"
+ }, 
+ "placeholderString": "Placeholder %s"
+}

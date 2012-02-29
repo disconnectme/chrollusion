@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <setting pref="extensions.jid1-F9UJ2thwoAm5gQ@jetpack.collusion.urls" title="Trusted front-ends (comma-separated list)" type="string"/>
+  <setting pref="extensions.jid1-F9UJ2thwoAm5gQ@jetpack.CollusionSound" title="Check to hear sounds when cookies are set" type="bool"/>
+</vbox>
