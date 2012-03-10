@@ -1,7 +1,7 @@
 <!DOCTYPE hmtl>
 <meta charset="utf-8">
 <meta name="viewport" content="width=640">
-<title>Collusion</title>
+<title>Collusion for Chrome</title>
 <base target="_blank">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -9,7 +9,7 @@
 <link href="index.css" rel="stylesheet" type="text/css"/>
 <div id="page">
 <div id="sidebar">
-  <h1>Collusion</h1>
+  <h1>Collusion<br/>&nbsp;&nbsp;for Chrome</h1>
   <div class="byline">By <a href="http://twitter.com/toolness">@toolness</a></div>
 
   <div id="sidebar-content">
@@ -88,8 +88,8 @@ function getJsonNoMatterWhat(url, callback) {
       var trackers = JSON.parse(xhr.responseText);
       callback(trackers);
     },
-    success: function(text) {
-      callback(trackers);
+    success: function(data, okText, xhr) {
+      callback(data);
     }});
 }
 
@@ -100,7 +100,7 @@ $(window).ready(function() {
   $("#domain-infos").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
-  getJsonNoMatterWhat("trackers.json", function(trackers) {
+  getJsonNoMatterWhat(chrome.extension.getURL("trackers.json"), function(trackers) {
     var runner = GraphRunner.Runner({
       width: addon.isInstalled() || graphUrl ? $(window).width() : 640,
       height: addon.isInstalled() || graphUrl ? $(window).height() : 480,
