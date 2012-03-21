@@ -8,19 +8,19 @@ g.node.unrelated-domain circle.glow {
 }
 
 g.node.unrelated-domain circle.visited {
-  stroke: #102050;
+  stroke: #bfffff;
 }
 
 g.node.unrelated-domain circle.site {
-  stroke: #202020;
+  stroke: #dfdfdf;
 }
 
 g.node.unrelated-domain circle.tracker {
-  stroke: #400000;
+  stroke: #efdfaf;
 }
 
 g.node.unrelated-domain circle.round-border {
-  fill: #151515;
+  fill: #eaeaea;
 }
 
 .round-border {
@@ -30,17 +30,17 @@ g.node.unrelated-domain circle.round-border {
 
 marker {
   stroke: none;
-  fill: #fff;
+  fill: #000;
   fill-opacity: 1;  
 }
 
 line.link {
-  stroke: #999;
+  stroke: #666;
   stroke-opacity: .6;
 }
 
 line.bold {
-  stroke: #fff;
+  stroke: #000;
   stroke-opacity: 1;
 }
 
@@ -53,17 +53,19 @@ html, body {
   font-size: 9pt;
   margin: 0;
   padding: 0;
-  background-color: black;
-  color: #999999;
+  background-color: white;
+  color: #666666;
+  height: 510px;
 }
 
 a {
-  color: white;
+  font-size: 9pt;
+  color: black;
 }
 
 #page {
   position: relative;
-  width: 640px;
+  width: 680px;
 }
 
 #sidebar {
@@ -71,8 +73,13 @@ a {
   top: 0px;
   left: 0px;
   width: 200px;
-  padding: 20px;
+  padding-left: 20px;
   pointer-events: none;
+}
+
+#chart {
+  position: absolute;
+  left: 224px;
 }
 
 #sidebar a, .info a, span.next {
@@ -88,6 +95,7 @@ h2.domain img.favicon {
   width: 16px;
   height: 16px;
   padding-right: 4px;
+  vertical-align: middle;
 }
 
 h2.domain img.tracker {
@@ -120,14 +128,18 @@ h2.domain img.tracker {
   color: black;
 }
 
-.byline {
-  margin-top: -10px;
-}
-
 #sidebar-content {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   padding: 5px;
   margin-top: 15px;
+}
+
+#sidebar-content p:first-child {
+  margin-top: 0;
+}
+
+ul {
+  padding-left: 20px;
 }
 
 #addon-installation-detected {
@@ -142,6 +154,7 @@ h2.domain img.tracker {
 }
 
 .privacy-policy {
+  margin-bottom: 0;
   font-size: 8pt;
 }
 
@@ -158,7 +171,7 @@ div.settings-menu > ul {
   font-size: 8pt;
 }
 
-div.settings-menu > ul > li {
+div.settings-menu > ul > li, div.settings-menu.collapsed {
   cursor: pointer;
   padding: 5px;
   margin-top: 5px;
@@ -169,9 +182,15 @@ div.settings-menu > ul > li:first-child {
   margin-top: 0px;
 }
 
-div.settings-menu > ul > li:hover {
+div.settings-menu > ul > li:hover, div.settings-menu.collapsed:hover {
   background: white;
   color: black;
+}
+
+div.settings-menu.collapsed {
+  display: none;
+  margin: 5px;
+  font-size: 8pt;
 }
 
 #deployment-info {

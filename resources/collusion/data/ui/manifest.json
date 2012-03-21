@@ -1,8 +1,26 @@
 {
   "name": "Collusion for Chrome",
   "version": "1.0.0",
-  "description": "Discover who’s tracking you online.",
+  "description": "Visualize who’s tracking you online.",
   "icons": {"48": "48.png", "128": "128.png"},
+  "permissions": [
+    "chrome://favicon/",
+    "contextMenus",
+    "cookies",
+    "history",
+    "idle",
+    "notifications",
+    "tabs",
+    "unlimitedStorage",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "16.png",
+    "default_title": "Display the Collusion graph",
+    "default_popup": "index.html"
+  },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
     "js": ["content.js"],

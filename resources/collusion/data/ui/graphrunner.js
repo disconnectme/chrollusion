@@ -59,15 +59,28 @@ var GraphRunner = (function(jQuery, d3) {
     vis.append("svg:path").attr("id", "domain-label");
     vis.append("svg:text").attr("id", "domain-label-text");
 
+    /* Makes a would-be selector CSS safe. */
+    function harden(selector) { return selector.replace('.', '-'); }
+
+    /* Renders a site's favicon, if any. */
+    function setFavicon(domain, className, attribute) {
+      // TODO: Try more URLs (the "www" subdomain, "domain.host").
+      var name = domain.name;
+      var url = 'http://' + name + '/favicon.ico';
+
+      $.get(url, function(data, status, xhr) {
+        var type = xhr.getResponseHeader('Content-Type');
+        type && type.indexOf('image/') + 1 && data &&
+            $('.' + className + '.' + harden(name)).attr(attribute, url);
+      });
+    }
+
     function setDomainLink(target, d) {
+      target.attr("href", "http://" + d.name);
       target.removeClass("tracker").removeClass("site");
       if (d.trackerInfo) {
-        var TRACKER_INFO = "http://www.privacychoice.org/companies/index/";
-        var trackerId = d.trackerInfo.network_id;
-        target.attr("href", TRACKER_INFO + trackerId);
         target.addClass("tracker");
       } else {
-        target.attr("href", "http://" + d.name);
         target.addClass("site");
       }
     }
@@ -84,16 +97,15 @@ var GraphRunner = (function(jQuery, d3) {
       if (!info.length) {
         info = $("#templates .info").clone();
         info.addClass(className);
-        info.find(".domain").text(d.name);
+        info.find("a.domain").text(d.name);
         var img = $('<img>');
-        if (d.trackerInfo) {
-          var TRACKER_LOGO = "http://images.privacychoice.org/images/network/";
-          var trackerId = d.trackerInfo.network_id;
-          info.find("h2.domain").empty();
-          img.attr("src", TRACKER_LOGO + trackerId + ".jpg").addClass("tracker");
-        } else
-          img.attr("src", 'http://' + d.name + '/favicon.ico')
-             .addClass("favicon");
+        if (d.trackerInfo)
+          info.find("h2.domain").addClass("tracker");
+        var attribute = "src";
+        var faviconName = "favicon";
+        img.attr(attribute, "favicon.png")
+           .addClass(faviconName + " " + harden(d.name));
+        setFavicon(d, faviconName, attribute);
         setDomainLink(info.find("a.domain"), d);
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });
@@ -184,7 +196,7 @@ var GraphRunner = (function(jQuery, d3) {
         var reverseWidth = 0 - labelWidth - r;
         d3.select("#domain-label").classed("hidden", false)
         .attr("d", "M " + pathStartX + " " + pathStartY + " l " + labelWidth + " 0 "
-              + "a 8 8 0 0 1 0 16 l " + reverseWidth + " 0 a 12 12 0 0 0 12 -12")
+              + "a 8 8 0 0 1 0 16 l " + reverseWidth + " 0 a 12 12 0 0 0 12 -16")
         .attr("class", "round-border " + getClassForSite(d));
         d3.select("#domain-label-text").classed("hidden", false)
           .attr("x", d.x + 16)
@@ -229,6 +241,11 @@ var GraphRunner = (function(jQuery, d3) {
             selectArcs(d).attr("marker-end", "url(#Triangle)")
                   .classed("hidden", false).classed("bold", true);
             showDomainInfo(d);
+            if ($("#sidebar h1").is(":visible")) {
+              $(".live-data").hide();
+              $("#domain-infos").show();
+              $("#show-instructions").slideDown(100);
+            }
             showPopupLabel(d);
 
             // Make directly-connected nodes opaque, the rest translucent:
@@ -251,7 +268,7 @@ var GraphRunner = (function(jQuery, d3) {
       gs.append("svg:circle")
         .attr("cx", "0")
         .attr("cy", "0")
-        .attr("r", "30")
+        .attr("r", "24")
         .attr("class", "glow")
         .attr("fill", "url(#glow-gradient)")
         .classed("hidden", function(d) {
@@ -269,12 +286,16 @@ var GraphRunner = (function(jQuery, d3) {
       if (!hideFavicons) {
         // If hiding favicons ("TED mode"), show initial letter of domain instead of favicon
         gs.append("svg:image")
-          .attr("class", "node")
+          .attr("class", function(d) {
+            var className = "node";
+            setFavicon(d, className, "href");
+            return className + " " + harden(d.name);
+          })
           .attr("width", "16")
           .attr("height", "16")
           .attr("x", "-8") // offset to make 16x16 favicon appear centered
           .attr("y", "-8")
-          .attr("xlink:href", function(d) {return 'http://' + d.name + '/favicon.ico'; } );
+          .attr("xlink:href", "favicon.png");
       }
 
       return node;
@@ -297,7 +318,7 @@ var GraphRunner = (function(jQuery, d3) {
 
     function draw(json) {
       var force = d3.layout.force()
-          .charge(-500)
+          .charge(-250)
           .distance(120)
           .friction(0)
           .nodes(json.nodes)
@@ -357,20 +378,22 @@ var GraphRunner = (function(jQuery, d3) {
       var domainIds = {};
 
       function getNodeId(domain) {
-        if (!(domain in domainIds)) {
-          domainIds[domain] = nodes.length;
+        var name = domain.name;
+        if (!(name in domainIds)) {
+          domainIds[name] = nodes.length;
           var trackerInfo = null;
           for (var i = 0; i < trackers.length; i++)
-            if (trackers[i].domain == domain) {
+            if (trackers[i].domain == name) {
               trackerInfo = trackers[i];
               break;
             }
           nodes.push({
-            name: domain,
+            name: name,
+            host: domain.host,
             trackerInfo: trackerInfo
           });
         }
-        return domainIds[domain];
+        return domainIds[name];
       }
 
       function addLink(options) {
@@ -389,9 +412,15 @@ var GraphRunner = (function(jQuery, d3) {
           this.data = json;
           drawing.force.stop();
 
-          for (var domain in json)
-            for (var referrer in json[domain].referrers)
-              addLink({from: referrer, to: domain});
+          for (var name in json) {
+            var domain = json[name];
+            var referrers = domain.referrers;
+            for (var referrerName in referrers)
+              addLink({
+                from: {name: referrerName, host: referrers[referrerName].host},
+                to: {name: name, host: domain.host}
+              });
+          }
           for (var n = 0; n < nodes.length; n++) {
             if (json[nodes[n].name]) {
               nodes[n].wasVisited = json[nodes[n].name].visited;
@@ -404,8 +433,8 @@ var GraphRunner = (function(jQuery, d3) {
              * Note that initializing them all exactly at center causes there to be zero distance,
              * which makes the repulsive force explode!! So add some random factor. */
             if (typeof nodes[n].x == "undefined") {
-              nodes[n].x = nodes[n].px = SVG_WIDTH / 2 + Math.floor( Math.random() * 50 ) ;
-              nodes[n].y = nodes[n].py = SVG_HEIGHT / 2 + Math.floor( Math.random() * 50 );
+              nodes[n].x = nodes[n].px = SVG_WIDTH / 2 - 25 + Math.floor( Math.random() * 50 ) ;
+              nodes[n].y = nodes[n].py = SVG_HEIGHT / 2 - 25 + Math.floor( Math.random() * 50 );
             }
           }
 
@@ -418,30 +447,12 @@ var GraphRunner = (function(jQuery, d3) {
       };
     }
 
-    function makeBufferedGraphUpdate(graph) {
-      var timeoutID = null;
-
-      return function(json) {
-        if (timeoutID !== null)
-         clearTimeout(timeoutID);
-        timeoutID = setTimeout(function() {
-          timeoutID = null;
-
-          // This is for debugging purposes only!
-          self.lastJSON = json;
-
-          graph.update(json);
-        }, 250);
-      };
-    }
-
     var graph = CollusionGraph(trackers);
 
     var self = {
       graph: graph,
       width: SVG_WIDTH,
-      height: SVG_HEIGHT,
-      updateGraph: makeBufferedGraphUpdate(graph)
+      height: SVG_HEIGHT
     };
 
     return self;

@@ -19,3 +19,45 @@
 
     Brian Kennish <byoogle@gmail.com>
 */
+
+/* Parses a URL into a domain name and hostname, regex free. */
+function getDomain(url) {
+  anchor.href = url;
+  var host = anchor.hostname;
+  var labels = host.split('.');
+  return {
+    name:
+        isNaN(parseFloat(labels[labels.length - 1])) ?
+            labels.splice(-2).join('.') : host,
+                // IP addresses should't be munged.
+    host: host
+  };
+}
+
+/* Constants. */
+var extension = chrome.extension;
+var sendRequest = extension.sendRequest;
+var anchor = document.createElement('a');
+
+/*
+  Raises tracking requests. We define a tracking request broadly because there
+  are many ways to track besides cookies (IP addresses, LSOs, browser
+  fingerprinting, to name a few) and we don't bug the user with sound effects.
+*/
+sendRequest({initialized: true}, function(response) {
+  var extensionId = getDomain(extension.getURL('')).name;
+  var referrerDomain = getDomain(response.referrerUrl);
+  var referrerName = referrerDomain.name;
+  var referrerHost = referrerDomain.host;
+
+  document.addEventListener('beforeload', function(event) {
+    var domain = getDomain(event.url);
+    var name = domain.name;
+    name && name != extensionId && name != referrerName &&
+        sendRequest({
+          domain: {name: name, host: domain.host},
+          referrerDomain: {name: referrerName, host: referrerHost},
+          type: event.target.nodeName.toLowerCase()
+        });
+  }, true);
+});

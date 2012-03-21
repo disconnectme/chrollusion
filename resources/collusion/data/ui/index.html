@@ -6,31 +6,31 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 <script src="d3.js"></script>
+<script src="index-content-script.js"></script>
 <link href="index.css" rel="stylesheet" type="text/css"/>
 <div id="page">
 <div id="sidebar">
   <h1>Collusion<br/>&nbsp;&nbsp;for Chrome</h1>
-  <div class="byline">By <a href="http://twitter.com/toolness">@toolness</a></div>
+  <hr/>
 
   <div id="sidebar-content">
-  <a id="about-tab-link">about</a> |
-  <a id="site-tab-link">site info</a>
-  <hr/>
   <div class="live-data" style="display: none;">
-    <p>Keep browsing the web. As you do so, a graph on this page will change. Each dot represents a website.</p>
-    <p>Sites in <span class="tracker">red</span> are confirmed trackers by <a href="http://privacychoice.org">privacychoice.org</a>. Sites in <span class="site">gray</span> are not, but may still track you.</p>
-    <p>Sites with a halo are sites that you have visited. Sites without a halo are sites you have not visited.</p>
-    <p>Hover your mouse over the dots to learn more about them.</p>
-    <div class="settings-menu">
-      <ul>
-        <li id="reset-graph">Reset Graph</li>
-        <li id="export-graph">Export Graph</li>
-        <li id="hide-ui">Hide UI</li>
-      </ul>
-    </div> <!-- end of settingsmenu -->
-    <p class="privacy-policy"><strong>Privacy Policy</strong> When you're using the add-on, we collect information from sites you visit solely to show you how they're connected. This information is stored locally on your computer and you can delete it by resetting the graph. We don't give away this information to anyone except you.</p>
+    <p>Browse the web normally. As you do, the graph in this popup will change. Each circle represents a site that’s been sent some of your personal info.</p>
+    <p>Circles with a halo are sites you’ve visited. Circles without a halo are sites you haven’t.</p>
+    <p>Circles in <span class="tracker">red</span> are confirmed tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
+    <p>Mouse over a circle to view that site’s tracking footprint. Drag a circle to reposition the graph.</p>
   </div> <!-- end of live-data -->
-  <div id="domain-infos">Mouse over any circle to see how that site is involved in tracking.</div> <!-- Templates are copied into here -->
+  <div id="domain-infos"></div> <!-- Templates are copied into here -->
+  <div class="settings-menu">
+    <ul>
+      <li id="reset-graph">Reset the graph</li>
+      <!-- Nobody cares about exporting. -->
+      <li id="hide-ui">Hide the sidebar</li>
+      <li id="show-instructions">Show the instructions</li>
+    </ul>
+  </div> <!-- end of settingsmenu -->
+  <p class="privacy-policy"><strong>Privacy:</strong> We collect info about the sites you go to only to illustrate how they’re connected. This info is stored locally on your computer and can be deleted anytime by resetting the graph.</p>
+  <div class="settings-menu collapsed" id="show-ui">Show the sidebar</div>
   </div> <!-- End of #sidebar-content -->
 </div> <!-- End of #sidebar -->
 <div id="chart"></div><!-- The d3 layout graph will go inside this div -->
@@ -40,14 +40,14 @@
 </div>
 <div id="templates">
   <div class="info" style="display: none;">
-    <h2 class="domain"></h2>
+    <h2 class="domain"><a class="domain"></a></h2>
 
     <div class="referrees">
-      <p>When you visit <a class="domain"></a>, it informs the following websites about your visit.</p>
+      <p>When you visit this site, the following sites are informed:</p>
       <ul></ul>
     </div>
     <div class="referrers">
-      <p>The site <a class="domain"></a> tracks your behavior across the following websites.</p>
+      <p>This site is informed when you visit the following sites:</p>
       <ul></ul>
     </div>
   </div>
@@ -58,25 +58,6 @@
 <script src="collusion-addon.js"></script>
 <script src="graphrunner.js"></script>
 <script>
-// taken from http://stackoverflow.com/questions/2090551/parse-query-string-in-javascript
-function getQueryVariable(variable) {
-  var query = window.location.search.substring(1);
-  var vars = query.split("&");
-  for (var i = 0; i < vars.length; i++) {
-    var pair = vars[i].split("=");
-    if (pair[0] == variable) {
-      return unescape(pair[1]);
-    }
-  }
-}
-
-function updateGraphViaPostMessage(graph, target) {
-  target.postMessage("ready", "*");
-  $(window).one("message", function(event) {
-    graph.update(JSON.parse(event.originalEvent.data));
-  });
-}
-
 function getJsonNoMatterWhat(url, callback) {
   /* jQuery.getJSON fails silently when trying to get a local json file. jQuery.ajax
    * gets the data but then throws a mysterious error. However, the data is there and
@@ -93,96 +74,53 @@ function getJsonNoMatterWhat(url, callback) {
     }});
 }
 
+var graph;
+
 $(window).ready(function() {
+  var extension = chrome.extension;
+  var backgroundPage = extension.getBackgroundPage();
   var addon = CollusionAddon;
-  var graphUrl = getQueryVariable("graph_url");
 
   $("#domain-infos").hide();
+  $("#show-instructions").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
-  getJsonNoMatterWhat(chrome.extension.getURL("trackers.json"), function(trackers) {
+  getJsonNoMatterWhat(extension.getURL("trackers.json"), function(trackers) {
     var runner = GraphRunner.Runner({
-      width: addon.isInstalled() || graphUrl ? $(window).width() : 640,
-      height: addon.isInstalled() || graphUrl ? $(window).height() : 480,
+      width: 456,
+      height: 510,
       trackers: trackers,
       hideFavicons: false 
     });
-    var graph = runner.graph;
-
-    // Enable drag-and-drop to import collusion graph data from a json file:
-    $(document.body).bind("dragover", function(event) {
-      event.preventDefault();
-    }).bind("drop", function(event) {
-      event.preventDefault();
-      var files = event.originalEvent.dataTransfer.files;
-      if (files.length == 1) {
-        var reader = new FileReader();
-        reader.onload = function() {
-          if (addon.importGraph) {
-            addon.importGraph(reader.result);
-            window.location.reload();
-          } else
-            graph.update(JSON.parse(reader.result));
-        };
-        reader.readAsText(files[0], "UTF-8");
-      }
-    });
-
-    $("#page").width(runner.width);
-
-    if (graphUrl) {
-      if (graphUrl == "opener") {
-        updateGraphViaPostMessage(graph, window.opener);
-      } else if (graphUrl == "parent") {
-        
-        updateGraphViaPostMessage(graph, window.parent);
-      } else
-        jQuery.getJSON(graphUrl, function(data) {
-          graph.update(data);
-        });
-      return;
-    }
+    graph = runner.graph;
 
     if (addon.isInstalled()) {
       // You should only ever see this page if the addon is installed, anyway
       $(".live-data").fadeIn();
-      addon.onGraph(runner.updateGraph);
+      graph.update(backgroundPage.log);
       $("#reset-graph").click(function() {
         if (addon.resetGraph) {
-          addon.resetGraph();
+          backgroundPage.log = {};
           window.location.reload();
         } else
           alert("You need to update your add-on to use this feature.");
       });
-      $("#export-graph").click(function() {
-        var data = JSON.stringify(graph.data);
-        window.open("data:application/json," + data);
-      });
       $("#hide-ui").click(function() {
-        $("#sidebar").slideUp();
-        $("#domain-infos").slideUp();
+        $("#sidebar h1, #sidebar hr, .live-data, #domain-infos, .settings-menu, #show-instructions, .privacy-policy")
+          .slideUp(function() {
+            $("#show-ui").slideDown(100);
+          });
       });
-      $("#save-graph").click(function() {
-        var data = JSON.stringify(graph.data);
-        addon.saveGraph(data);
-        alert("Graph Saved!");
+      $("#show-instructions").click(function() {
+        $("#domain-infos").hide();
+        $(".live-data").show();
+        $("#show-instructions").slideUp(100);
       });
-      $("#load-graph").click(function() {
-        addon.getSavedGraph();
-      });
-      $("#clear-graph-history").click(function() {
-        var to_save = "{}"
-        addon.saveGraph(to_save);
-        addon.resetGraph();
-        window.location.reload();
-      });
-      $("#about-tab-link").click(function() {
-        $(".live-data").slideDown();
-        $("#domain-infos").slideUp();
-      });
-      $("#site-tab-link").click(function() {
-        $(".live-data").slideUp();
-        $("#domain-infos").slideDown();
+      $("#show-ui").click(function() {
+        $("#show-ui").slideUp(100, function() {
+          $("#sidebar h1, #sidebar hr, .live-data, .settings-menu:not(.collapsed), .privacy-policy")
+            .slideDown();
+        });
       });
     }
   });

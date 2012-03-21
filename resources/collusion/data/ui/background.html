@@ -1,0 +1,74 @@
+<!--
+  A background page that aggregates tracking requests.
+
+  Copyright 2012 Disconnect, Inc.
+
+  This program is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later
+  version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with
+  this program. If not, see <http://www.gnu.org/licenses/>.
+
+  Authors (one per line):
+
+    Brian Kennish <byoogle@gmail.com>
+-->
+<script>
+  /* Constants. */
+  var extension = chrome.extension;
+  var log = {};
+  var startTime = new Date();
+
+  localStorage.sidebarCollapsed && localStorage.sidebarCollapsed--;
+      // An experimental "semisticky" bit.
+
+  /* Refreshes the data and graph if open. */
+  extension.onRequest.addListener(function(request, sender, sendResponse) {
+    if (request.initialized) sendResponse({referrerUrl: sender.tab.url});
+    else {
+      // The Collusion data structure.
+      var domain = request.domain;
+      var domainName = domain.name;
+      if (!(domainName in log))
+          log[domainName] = {
+            host: domain.host,
+            referrers: {},
+            visited: false
+          };
+
+      var referrerDomain = request.referrerDomain;
+      var referrerName = referrerDomain.name;
+      var referrerHost = referrerDomain.host;
+      if (!(referrerName in log))
+          log[referrerName] = {
+            host: referrerHost,
+            referrers: {}
+          };
+      log[referrerName].visited = true;
+
+      var referrers = log[domainName].referrers;
+      if (!(referrerName in referrers))
+          referrers[referrerName] = {
+            host: referrerHost,
+            types: [new Date() - startTime]
+          };
+
+      var types = referrers[referrerName].types;
+      var type = request.type;
+      types.indexOf(type) == -1 && types.push(type);
+
+      // A live update.
+      var popup = extension.getViews({type: 'popup'})[0];
+      popup && popup.graph && popup.graph.update(log);
+
+      // Cleanup.
+      sendResponse({});
+    }
+  });
+</script>
