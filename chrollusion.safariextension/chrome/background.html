@@ -28,6 +28,7 @@
   /* Constants. */
   var extension = chrome.extension;
   var setIcon = chrome.browserAction.setIcon;
+  var tabs = {};
   var log = {};
   var startTime = new Date();
   var scenes = [1, 2, 3, 4];
@@ -40,9 +41,16 @@
       // An experimental "semisticky" bit.
   setIcon({path: currentScene + '/1' + fileExtension});
 
+  /* Restricts the toolbar animation to 1x per load of the topmost window. */
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+    changeInfo.status == 'loading' && delete tabs[tabId];
+  });
+
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if (request.initialized) sendResponse({referrerUrl: sender.tab.url});
+    var tab = sender.tab;
+
+    if (request.initialized) sendResponse({referrerUrl: tab.url});
     else {
       // The Collusion data structure.
       var domain = request.domain;
@@ -80,7 +88,10 @@
       popup && popup.graph && popup.graph.update(log);
 
       // Animation.
-      if (request.animate) {
+      var tabId = tab.id;
+
+      if (!(tabId in tabs)) {
+        tabs[tabId] = true;
         for (var i = 0; i < frameCount - 1; i++)
             setTimeout(function(scene, index) {
               setIcon({path: scene + '/' + (index + 2) + fileExtension});

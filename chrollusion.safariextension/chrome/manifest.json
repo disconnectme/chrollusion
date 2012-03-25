@@ -1,6 +1,6 @@
 {
   "name": "Collusion for Chrome",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Visualize who’s tracking you online.",
   "icons": {"48": "48.png", "128": "128.png"},
   "permissions": [
