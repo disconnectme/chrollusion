@@ -20,17 +20,37 @@
     Brian Kennish <byoogle@gmail.com>
 -->
 <script>
+  /* Picks a random animation path. */
+  function getScene() {
+    return scenes.splice(Math.floor(Math.random() * scenes.length), 1)[0];
+  }
+
   /* Constants. */
   var extension = chrome.extension;
+  var setIcon = chrome.browserAction.setIcon;
+  var tabs = {};
   var log = {};
   var startTime = new Date();
+  var scenes = [1, 2, 3, 4];
+  var currentScene = getScene();
+  var frameCount = 7;
+  var frameLength = 100;
+  var fileExtension = '.png';
 
   localStorage.sidebarCollapsed && localStorage.sidebarCollapsed--;
       // An experimental "semisticky" bit.
+  setIcon({path: currentScene + '/1' + fileExtension});
+
+  /* Restricts the toolbar animation to 1x per load of the topmost window. */
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+    changeInfo.status == 'loading' && delete tabs[tabId];
+  });
 
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if (request.initialized) sendResponse({referrerUrl: sender.tab.url});
+    var tab = sender.tab;
+
+    if (request.initialized) sendResponse({referrerUrl: tab.url});
     else {
       // The Collusion data structure.
       var domain = request.domain;
@@ -66,6 +86,26 @@
       // A live update.
       var popup = extension.getViews({type: 'popup'})[0];
       popup && popup.graph && popup.graph.update(log);
+
+      // Animation.
+      var tabId = tab.id;
+
+      if (!(tabId in tabs) && request.animate) {
+        tabs[tabId] = true;
+        for (var i = 0; i < frameCount - 1; i++)
+            setTimeout(function(scene, index) {
+              setIcon({path: scene + '/' + (index + 2) + fileExtension});
+            }, i * frameLength, currentScene, i);
+        var previousScene = currentScene;
+        currentScene = getScene();
+        scenes.push(previousScene);
+        for (var i = 0; i < frameCount; i++)
+            setTimeout(function(scene, index) {
+              setIcon({
+                path: scene + '/' + (frameCount - index) + fileExtension
+              });
+            }, (i + frameCount - 1) * frameLength, currentScene, i);
+      }
 
       // Cleanup.
       sendResponse({});

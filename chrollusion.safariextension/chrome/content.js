@@ -38,6 +38,7 @@ function getDomain(url) {
 var extension = chrome.extension;
 var sendRequest = extension.sendRequest;
 var anchor = document.createElement('a');
+var animate = true;
 
 /*
   Raises tracking requests. We define a tracking request broadly because there
@@ -57,7 +58,8 @@ sendRequest({initialized: true}, function(response) {
         sendRequest({
           domain: {name: name, host: domain.host},
           referrerDomain: {name: referrerName, host: referrerHost},
-          type: event.target.nodeName.toLowerCase()
+          type: event.target.nodeName.toLowerCase(),
+          animate: animate && !(animate = false)
         });
   }, true);
 });
