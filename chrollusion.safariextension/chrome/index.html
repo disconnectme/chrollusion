@@ -9,13 +9,13 @@
 <script src="index-content-script.js"></script>
 <link href="index.css" rel="stylesheet" type="text/css"/>
 <div id="page">
-<div id="sidebar">
+<div id="sidebar" style="display: none;">
   <h1>Collusion<br/>&nbsp;&nbsp;for Chrome</h1>
   <hr/>
 
   <div id="sidebar-content">
-  <div class="live-data" style="display: none;">
-    <p>Browse the web normally. As you do, the graph in this popup will change. Each circle represents a site that’s been sent some of your personal info.</p>
+  <div class="live-data">
+    <p>Browse the web normally. As you do, the graph in this popup will change and the icon in the toolbar will animate. Each circle in the graph represents a site that’s been sent some of your personal info.</p>
     <p>Circles with a halo are sites you’ve visited. Circles without a halo are sites you haven’t.</p>
     <p>Circles in <span class="tracker">red</span> are confirmed tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
     <p>Mouse over a circle to view that site’s tracking footprint. Drag a circle to reposition the graph.</p>
@@ -30,10 +30,10 @@
     </ul>
   </div> <!-- end of settingsmenu -->
   <p class="privacy-policy"><strong>Privacy:</strong> We collect info about the sites you go to only to illustrate how they’re connected. This info is stored locally on your computer and can be deleted anytime by resetting the graph.</p>
-  <div class="settings-menu collapsed" id="show-ui">Show the sidebar</div>
   </div> <!-- End of #sidebar-content -->
 </div> <!-- End of #sidebar -->
 <div id="chart"></div><!-- The d3 layout graph will go inside this div -->
+<div class="settings-menu collapsed" id="show-ui">+</div>
 </div>
 <div id="addon-installation-detected" style="display: none;">
   Collusion add-on detected! Reload this page to see your graph.
@@ -79,6 +79,7 @@ var graph;
 $(window).ready(function() {
   var extension = chrome.extension;
   var backgroundPage = extension.getBackgroundPage();
+  var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
   var addon = CollusionAddon;
 
   $("#domain-infos").hide();
@@ -87,8 +88,8 @@ $(window).ready(function() {
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat(extension.getURL("trackers.json"), function(trackers) {
     var runner = GraphRunner.Runner({
-      width: 456,
-      height: 510,
+      width: sidebarCollapsed ? 720 : 496,
+      height: 540,
       trackers: trackers,
       hideFavicons: false 
     });
@@ -96,7 +97,11 @@ $(window).ready(function() {
 
     if (addon.isInstalled()) {
       // You should only ever see this page if the addon is installed, anyway
-      $(".live-data").fadeIn();
+      if (sidebarCollapsed) {
+        $("#show-ui").slideDown(100);
+        $("#chart").addClass("fullscreen");
+      } else
+        $("#sidebar").slideDown('fast');
       graph.update(backgroundPage.log);
       $("#reset-graph").click(function() {
         if (addon.resetGraph) {
@@ -106,21 +111,18 @@ $(window).ready(function() {
           alert("You need to update your add-on to use this feature.");
       });
       $("#hide-ui").click(function() {
-        $("#sidebar h1, #sidebar hr, .live-data, #domain-infos, .settings-menu, #show-instructions, .privacy-policy")
-          .slideUp(function() {
-            $("#show-ui").slideDown(100);
-          });
+        localStorage.sidebarCollapsed = 3;
+        $("#sidebar, #domain-infos, #show-instructions").slideUp('fast');
+        window.setTimeout(function() { window.location.reload(); }, 200);
       });
       $("#show-instructions").click(function() {
-        $("#domain-infos").hide();
+        $("#domain-infos, #show-instructions").hide();
         $(".live-data").show();
-        $("#show-instructions").slideUp(100);
       });
       $("#show-ui").click(function() {
-        $("#show-ui").slideUp(100, function() {
-          $("#sidebar h1, #sidebar hr, .live-data, .settings-menu:not(.collapsed), .privacy-policy")
-            .slideDown();
-        });
+        delete localStorage.sidebarCollapsed;
+        $("#show-ui").slideUp(100);
+        window.setTimeout(function() { window.location.reload(); }, 100);
       });
     }
   });

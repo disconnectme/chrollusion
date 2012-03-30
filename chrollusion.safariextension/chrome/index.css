@@ -55,7 +55,7 @@ html, body {
   padding: 0;
   background-color: white;
   color: #666666;
-  height: 510px;
+  height: 540px;
 }
 
 a {
@@ -65,7 +65,7 @@ a {
 
 #page {
   position: relative;
-  width: 680px;
+  width: 720px;
 }
 
 #sidebar {
@@ -80,6 +80,10 @@ a {
 #chart {
   position: absolute;
   left: 224px;
+}
+
+#chart.fullscreen {
+  left: 0;
 }
 
 #sidebar a, .info a, span.next {
@@ -189,7 +193,11 @@ div.settings-menu > ul > li:hover, div.settings-menu.collapsed:hover {
 
 div.settings-menu.collapsed {
   display: none;
-  margin: 5px;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 10px;
+  text-align: center;
   font-size: 8pt;
 }
 
