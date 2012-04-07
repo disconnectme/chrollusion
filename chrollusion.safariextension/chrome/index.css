@@ -136,6 +136,7 @@ h2.domain img.tracker {
   background-color: rgba(0, 0, 0, 0.1);
   padding: 5px;
   margin-top: 15px;
+  border-radius: 5px;
 }
 
 #sidebar-content p:first-child {
@@ -179,6 +180,7 @@ div.settings-menu > ul > li, div.settings-menu.collapsed {
   cursor: pointer;
   padding: 5px;
   margin-top: 5px;
+  border-radius: 3px;
   background: rgba(0, 0, 0, 0.75);
 }
 
