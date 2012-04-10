@@ -31,14 +31,14 @@
   var tabs = {};
   var log = {};
   var startTime = new Date();
-  var scenes = [1, 2, 3, 4];
+  var scenes = [1, 2, 3, 4, 5];
   var currentScene = getScene();
   var frameCount = 7;
   var frameLength = 100;
   var fileExtension = '.png';
 
-  localStorage.sidebarCollapsed && localStorage.sidebarCollapsed--;
-      // An experimental "semisticky" bit.
+  parseInt(localStorage.sidebarCollapsed, 10) &&
+      localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
   setIcon({path: currentScene + '/1' + fileExtension});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */

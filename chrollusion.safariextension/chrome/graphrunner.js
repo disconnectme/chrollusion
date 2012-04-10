@@ -243,8 +243,7 @@ var GraphRunner = (function(jQuery, d3) {
             showDomainInfo(d);
             if ($("#sidebar h1").is(":visible")) {
               $(".live-data").hide();
-              $("#domain-infos").show();
-              $("#show-instructions").slideDown(100);
+              $("#domain-infos, #show-instructions").show();
             }
             showPopupLabel(d);
 
