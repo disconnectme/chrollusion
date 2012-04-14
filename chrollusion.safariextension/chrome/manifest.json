@@ -1,6 +1,6 @@
 {
   "name": "Collusion for Chrome",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Visualize the invisible websites that track you.",
   "icons": {"48": "48.png", "128": "128.png"},
   "permissions": [
