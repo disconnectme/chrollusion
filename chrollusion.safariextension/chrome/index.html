@@ -89,8 +89,8 @@ $(window).ready(function() {
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat(extension.getURL("trackers.json"), function(trackers) {
     var runner = GraphRunner.Runner({
-      width: sidebarCollapsed ? 720 : 496,
-      height: 540,
+      width: sidebarCollapsed ? 800 : 576,
+      height: 596,
       trackers: trackers,
       hideFavicons: false 
     });
