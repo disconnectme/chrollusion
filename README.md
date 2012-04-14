@@ -15,11 +15,11 @@ Inside the Extensions tab click "Load unpacked extensions"
 
 Navigate to the directory where you saved chrollusion
 
-Within the chrollusion.safariextension directory and select "chrome" then click "chrome" and open
+Within the chrollusion.safariextension directory select "chrome" and open
 
 Click "Update Extensions Now" inside of the Extensions tab.
 
-When making changes be sure to click the reload link inside of the Extensions tab after you have made any chages to the core chrollusion code in order to be able to see the changes reflected in the extension.
+When making changes be sure to click the Reload link inside of the Extensions tab after you have made any chages to the core Chrollusion code in order to be able to see the changes reflected in the extension.
 
 ## Software Used
 
