@@ -90,7 +90,7 @@ $(window).ready(function() {
   getJsonNoMatterWhat(extension.getURL("trackers.json"), function(trackers) {
     var runner = GraphRunner.Runner({
       width: sidebarCollapsed ? 800 : 576,
-      height: 596,
+      height: 600,
       trackers: trackers,
       hideFavicons: false 
     });

@@ -267,7 +267,7 @@ var GraphRunner = (function(jQuery, d3) {
       gs.append("svg:circle")
         .attr("cx", "0")
         .attr("cy", "0")
-        .attr("r", "24")
+        .attr("r", "18")
         .attr("class", "glow")
         .attr("fill", "url(#glow-gradient)")
         .classed("hidden", function(d) {
