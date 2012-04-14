@@ -28,6 +28,8 @@
   /* Constants. */
   var extension = chrome.extension;
   var setIcon = chrome.browserAction.setIcon;
+  var setBadgeText = chrome.browserAction.setBadgeText;
+  var setBadgeBackgroundColor = chrome.browserAction.setBadgeBackgroundColor;
   var tabs = {};
   var log = {};
   var startTime = new Date();
@@ -36,21 +38,39 @@
   var frameCount = 7;
   var frameLength = 100;
   var fileExtension = '.png';
+  var lastURL = '';
+
+  // Initialize the tracker counter for a given tab, with arrays to be filled
+  // with all 3rd party domains, and a subset of those that are confirmed trackers.
+  var initializeCounter = function (tabId) {
+	  tabs[tabId] = { all: [], confirmed_trackers: [], animated: false };
+  };
 
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
   setIcon({path: currentScene + '/1' + fileExtension});
 
-  /* Restricts the toolbar animation to 1x per load of the topmost window. */
-  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-    changeInfo.status == 'loading' && delete tabs[tabId];
+  // Listen for tab changes.
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	var hashPattern = /#.*$/;
+	// If the change is that the page has started loading...
+    changeInfo.status == 'loading' 
+		// ... and the new page isn't just the same URL with a different hash value ...
+		&& (lastURL.replace(hashPattern, "") !== tab.url.replace(hashPattern, "") || lastURL === tab.url)
+		// ... then reset the current tab's counter.
+		&& initializeCounter(tabId);
+	// Set lastURL to current URL.
+	lastURL = tab.url;
   });
 
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
     var tab = sender.tab;
-
-    if (request.initialized) sendResponse({referrerUrl: tab.url});
+    var tabId = tab.id;
+	if (!tabs[tabId]) initializeCounter(tabId);
+    if (request.initialized) {
+		sendResponse({referrerUrl: tab.url});
+	}
     else {
       // The Collusion data structure.
       var domain = request.domain;
@@ -87,25 +107,34 @@
       var popup = extension.getViews({type: 'popup'})[0];
       popup && popup.graph && popup.graph.update(log);
 
-      // Animation.
-      var tabId = tab.id;
-
-      if (!(tabId in tabs) && request.animate) {
-        tabs[tabId] = true;
-        for (var i = 0; i < frameCount - 1; i++)
-            setTimeout(function(scene, index) {
-              setIcon({path: scene + '/' + (index + 2) + fileExtension});
-            }, i * frameLength, currentScene, i);
-        var previousScene = currentScene;
-        currentScene = getScene();
-        scenes.push(previousScene);
-        for (var i = 0; i < frameCount; i++)
-            setTimeout(function(scene, index) {
-              setIcon({
-                path: scene + '/' + (frameCount - index) + fileExtension
-              });
-            }, (i + frameCount - 1) * frameLength, currentScene, i);
+      // Animate if icon hasn't animated yet while on this URL.
+      if (!tabs[tabId].animated) {
+		if (request.animate) {
+			for (var i = 0; i < frameCount - 1; i++)
+				setTimeout(function(scene, index) {
+				  setIcon({path: scene + '/' + (index + 2) + fileExtension});
+				}, i * frameLength, currentScene, i);
+			var previousScene = currentScene;
+			currentScene = getScene();
+			scenes.push(previousScene);
+			for (var i = 0; i < frameCount; i++)
+				setTimeout(function(scene, index) {
+				  setIcon({
+					path: scene + '/' + (frameCount - index) + fileExtension
+				  });
+				}, (i + frameCount - 1) * frameLength, currentScene, i);
+		}
+		tabs[tabId].animate = true;
       }
+
+	  // If we haven't seen this 3rd-party domain here yet...
+	  if (tabs[tabId].all.indexOf(domainName) === -1) {
+	  	// Mark this 3rd-party domain as seen.
+		tabs[tabId].all.push(domainName);
+		// Update the icon badge.
+		setBadgeBackgroundColor({ color: [ 255, 0, 0, 255 ], tabId: tabId });
+		setBadgeText({ text: String(tabs[tabId].all.length), tabId: tabId });
+	  }
 
       // Cleanup.
       sendResponse({});
