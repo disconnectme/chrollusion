@@ -56,7 +56,7 @@
 	// If the change is that the page has started loading...
     changeInfo.status == 'loading' 
 		// ... and the new page isn't just the same URL with a different hash value ...
-		&& lastURL.replace(hashPattern, "") !== tab.url.replace(hashPattern, "")
+		&& (lastURL.replace(hashPattern, "") !== tab.url.replace(hashPattern, "") || lastURL === tab.url)
 		// ... then reset the current tab's counter.
 		&& initializeCounter(tabId);
 	// Set lastURL to current URL.
