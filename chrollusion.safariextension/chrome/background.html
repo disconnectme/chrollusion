@@ -38,14 +38,18 @@
   var frameCount = 7;
   var frameLength = 100;
   var fileExtension = '.png';
+  var lastURL = false;
 
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
   setIcon({path: currentScene + '/1' + fileExtension});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
-  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-    changeInfo.status == 'loading' && delete tabs[tabId];
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	var hashPattern = /#.*$/;
+    changeInfo.status == 'loading' 
+		&& lastURL.replace(hashPattern, "") !== tab.url.replace(hashPattern, "")
+		&& delete tabs[tabId];
   });
 
   /* Refreshes the data and graph if open. */
