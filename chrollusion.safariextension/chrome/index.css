@@ -55,7 +55,7 @@ html, body {
   padding: 0;
   background-color: white;
   color: #666666;
-  height: 540px;
+  height: 600px;
 }
 
 a {
@@ -65,7 +65,7 @@ a {
 
 #page {
   position: relative;
-  width: 720px;
+  width: 800px;
 }
 
 #sidebar {
