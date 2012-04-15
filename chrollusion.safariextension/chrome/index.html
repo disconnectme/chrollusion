@@ -29,6 +29,10 @@
       <li id="hide-ui">Hide the sidebar</li>
       <li id="show-instructions">Show the instructions</li>
     </ul>
+	<form name="checkboxes">
+		<label><input type="checkbox" id="show-animation" data-storage="should_show_animation" data-default="1" />Animate Extension Icon</label>
+		<label><input type="checkbox" id="show-badge" data-storage="should_show_badge" data-default="1" />Show Count in Icon</label>
+	</form>
   </div> <!-- end of settingsmenu -->
   <p class="privacy-policy"><strong>Privacy:</strong> We collect info about the sites you go to only to illustrate how they’re connected. This info is stored locally on your computer and can be deleted anytime by resetting the graph or quitting your browser.</p>
   </div> <!-- End of #sidebar-content -->
@@ -124,6 +128,19 @@ $(window).ready(function() {
         delete localStorage.sidebarCollapsed;
         $("#show-ui").slideUp(100);
         window.setTimeout(function() { window.location.reload(); }, 100);
+      });
+	  
+	  var $checkboxes = $("#show-animation, #show-badge");
+	  $checkboxes.each(function (i, box) {
+		var $box = $(box);
+		var storage_var = $box.attr("data-storage");
+		var default_val = $box.attr("data-default");
+		var pref = localStorage.getItem(storage_var);
+		if (pref === null) pref = default_val;
+		$box.prop("checked", Boolean(parseInt(pref, 10)));
+		$box.change(function (e) {
+			localStorage.setItem(storage_var, ($box.prop("checked") ? "1" : "0"));
+		});
       });
     }
   });

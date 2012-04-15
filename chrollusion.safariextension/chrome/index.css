@@ -193,6 +193,17 @@ div.settings-menu > ul > li:hover, div.settings-menu.collapsed:hover {
   color: black;
 }
 
+div.settings-menu form {
+  padding: 5px 0;	
+  margin-bottom: 0; /* override browser default; consider adding reset.css */
+  color: black;
+}
+
+div.settings-menu form label {
+  display: block;
+  padding: 3px 0;
+}
+
 div.settings-menu.collapsed {
   display: none;
   position: absolute;
