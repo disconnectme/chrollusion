@@ -5,13 +5,14 @@
 <base target="_blank">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<script src="port.js"></script>
 <script src="d3.js"></script>
 <script src="index-content-script.js"></script>
 <link href="index.css" rel="stylesheet" type="text/css"/>
 <div id="page">
 <div id="sidebar" style="display: none;">
   <h1></h1>
-  <img src="chrome.png" alt="Collusion for Chrome">
+  <img id="logo">
   <hr/>
 
   <div id="sidebar-content">
@@ -83,6 +84,11 @@ $(window).ready(function() {
   var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
   var addon = CollusionAddon;
 
+  if (SAFARI) {
+    $("#logo").attr({src: "safari.png", alt: "Collusion for Safari"});
+  } else {
+    $("#logo").attr({src: "chrome.png", alt: "Collusion for Chrome"});
+  }
   $("#domain-infos").hide();
   $("#show-instructions").hide();
 
