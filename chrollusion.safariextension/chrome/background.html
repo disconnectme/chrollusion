@@ -39,7 +39,7 @@
 
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
-  setIcon({path: currentScene + '/1' + fileExtension});
+  setIcon({path: 'images/' + currentScene + '/1' + fileExtension});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
@@ -94,7 +94,7 @@
         tabs[tabId] = true;
         for (var i = 0; i < frameCount - 1; i++)
             setTimeout(function(scene, index) {
-              setIcon({path: scene + '/' + (index + 2) + fileExtension});
+              setIcon({path: 'images/' + scene + '/' + (index + 2) + fileExtension});
             }, i * frameLength, currentScene, i);
         var previousScene = currentScene;
         currentScene = getScene();
@@ -102,7 +102,7 @@
         for (var i = 0; i < frameCount; i++)
             setTimeout(function(scene, index) {
               setIcon({
-                path: scene + '/' + (frameCount - index) + fileExtension
+                path: 'images/' + scene + '/' + (frameCount - index) + fileExtension
               });
             }, (i + frameCount - 1) * frameLength, currentScene, i);
       }
