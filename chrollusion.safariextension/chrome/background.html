@@ -91,7 +91,7 @@
       // Animation.
       var tabId = tab.id;
 
-      if (!(tabId in tabs) && request.animate) {
+      if (!(tabId in tabs) && request.animate && localStorage.getItem("should_show_animation") != "0") {
         tabs[tabId] = true;
         for (var i = 0; i < frameCount - 1; i++)
             setTimeout(function(scene, index) {
