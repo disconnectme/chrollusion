@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Disconnect</string>
+	<key>Builder Version</key>
+	<string>6534.55.3</string>
+	<key>CFBundleDisplayName</key>
+	<string>Collusion for Safari</string>
+	<key>CFBundleIdentifier</key>
+	<string>me.disconnect.chrollusion</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Database Quota</key>
+		<real>104857600</real>
+		<key>Global Page</key>
+		<string>chrome/background.html</string>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>chrome/index.html</string>
+				<key>Height</key>
+				<real>600</real>
+				<key>Identifier</key>
+				<string>popover</string>
+				<key>Width</key>
+				<real>800</real>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>toolbar</string>
+				<key>Image</key>
+				<string>chrome/1/1.png</string>
+				<key>Label</key>
+				<string>Collusion for Safari</string>
+				<key>Popover</key>
+				<string>popover</string>
+				<key>Tool Tip</key>
+				<string>Display the Collusion graph</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>Start</key>
+			<array>
+				<string>chrome/content.js</string>
+			</array>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>Visualize the invisible websites that track you.</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Update Manifest URL</key>
+	<string>https://disconnect.me/collusion.plist</string>
+	<key>Website</key>
+	<string>https://disconnect.me/collusion</string>
+</dict>
+</plist>
