@@ -25,13 +25,35 @@ function getDomain(url) {
   anchor.href = url;
   var host = anchor.hostname;
   var labels = host.split('.');
-  return {
-    name:
-        isNaN(parseFloat(labels[labels.length - 1])) ?
-            labels.splice(-2).join('.') : host,
-                // IP addresses should't be munged.
-    host: host
-  };
+
+  var len = labels.length;
+  var tld = labels[len - 1];
+  //
+  if (isNaN(parseFloat(tld))) {
+    // ARGH we cant do something like a 'getJsonNoMatterWhat' here (should we???). So.. just live with an "inline"
+    // json data structure for now!!!
+    var SLDs = { // second-level domains. We'll need to splice out *3* parts to get the proper domain name!!!
+      sg: [ 'com', 'edu', 'gov', 'net', 'org', 'per' ],
+      uk: [ 'ac', 'co', 'gov', 'ltd', 'me', 'mod', 'net', 'nhs', 'nic', 'org', 'parliament', 'plc', 'police', 'sch' ]
+    }
+
+    if ((tld in SLDs) && -1 != SLDs[tld].indexOf(labels[len - 2]))
+      return {
+        name: labels.splice(-3).join('.'),
+        host: host
+      };
+    else
+      return {
+        name: labels.splice(-2).join('.'),
+        host: host
+      };
+  }
+  else
+      // IP addresses should't be munged.
+    return {
+      name: host,
+      host: host
+    };
 }
 
 /* Constants. */
