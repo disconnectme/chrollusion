@@ -5,10 +5,10 @@
 <base target="_blank">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-<script src="port.js"></script>
-<script src="d3.js"></script>
-<script src="index-content-script.js"></script>
-<link href="index.css" rel="stylesheet" type="text/css"/>
+<script src="js/vendor/port.js"></script>
+<script src="js/vendor/d3.js"></script>
+<script src="js/index-content-script.js"></script>
+<link href="css/index.css" rel="stylesheet" type="text/css"/>
 <div id="page">
 <div id="sidebar" style="display: none;">
   <h1></h1>
@@ -54,11 +54,11 @@
     </div>
   </div>
 </div>
-<script src="d3.layout.js"></script>
-<script src="d3.geom.js"></script>
-<script src="jquery.min.js"></script>
-<script src="collusion-addon.js"></script>
-<script src="graphrunner.js"></script>
+<script src="js/vendor/d3.layout.js"></script>
+<script src="js/vendor/d3.geom.js"></script>
+<script src="js/vendor/jquery.min.js"></script>
+<script src="js/collusion-addon.js"></script>
+<script src="js/graphrunner.js"></script>
 <script>
 function getJsonNoMatterWhat(url, callback) {
   /* jQuery.getJSON fails silently when trying to get a local json file. jQuery.ajax
@@ -85,9 +85,9 @@ $(window).ready(function() {
   var addon = CollusionAddon;
 
   if (SAFARI) {
-    $("#logo").attr({src: "safari.png", alt: "Collusion for Safari"});
+    $("#logo").attr({src: "images/safari.png", alt: "Collusion for Safari"});
   } else {
-    $("#logo").attr({src: "chrome.png", alt: "Collusion for Chrome"});
+    $("#logo").attr({src: "images/chrome.png", alt: "Collusion for Chrome"});
   }
   $("#domain-infos").hide();
   $("#show-instructions").hide();
