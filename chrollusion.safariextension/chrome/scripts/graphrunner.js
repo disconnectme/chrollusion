@@ -101,11 +101,9 @@ var GraphRunner = (function(jQuery, d3) {
         var img = $('<img>');
         if (d.trackerInfo)
           info.find("h2.domain").addClass("tracker");
-        var attribute = "src";
         var faviconName = "favicon";
-        img.attr(attribute, "favicon.png")
-           .addClass(faviconName + " " + harden(d.name));
-        setFavicon(d, faviconName, attribute);
+        img.addClass(faviconName + " " + harden(d.name));
+        setFavicon(d, faviconName, "src");
         setDomainLink(info.find("a.domain"), d);
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });
@@ -294,7 +292,7 @@ var GraphRunner = (function(jQuery, d3) {
           .attr("height", "16")
           .attr("x", "-8") // offset to make 16x16 favicon appear centered
           .attr("y", "-8")
-          .attr("xlink:href", "favicon.png");
+          .attr("xlink:href", "../images/favicon.png");
       }
 
       return node;

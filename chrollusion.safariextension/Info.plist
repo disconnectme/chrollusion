@@ -21,12 +21,12 @@
 		<key>Database Quota</key>
 		<real>104857600</real>
 		<key>Global Page</key>
-		<string>chrome/background.html</string>
+		<string>chrome/markup/background.html</string>
 		<key>Popovers</key>
 		<array>
 			<dict>
 				<key>Filename</key>
-				<string>chrome/index.html</string>
+				<string>chrome/markup/index.html</string>
 				<key>Height</key>
 				<real>600</real>
 				<key>Identifier</key>
@@ -41,7 +41,7 @@
 				<key>Identifier</key>
 				<string>toolbar</string>
 				<key>Image</key>
-				<string>chrome/1/1.png</string>
+				<string>chrome/images/1/1.png</string>
 				<key>Label</key>
 				<string>Collusion for Safari</string>
 				<key>Popover</key>
@@ -57,7 +57,8 @@
 		<dict>
 			<key>Start</key>
 			<array>
-				<string>chrome/content.js</string>
+				<string>chrome/scripts/vendor/port.js</string>
+				<string>chrome/scripts/content.js</string>
 			</array>
 		</dict>
 	</dict>

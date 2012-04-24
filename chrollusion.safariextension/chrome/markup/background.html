@@ -19,7 +19,7 @@
 
     Brian Kennish <byoogle@gmail.com>
 -->
-<script src="js/vendor/port.js"></script>
+<script src="../scripts/vendor/port.js"></script>
 <script>
   /* Picks a random animation path. */
   function getScene() {
@@ -50,7 +50,7 @@
 
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
-  setIcon({path: 'images/' + currentScene + '/1' + fileExtension});
+  setIcon({path: '../images/' + currentScene + '/1' + fileExtension});
 
   // Listen for tab changes.
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -114,7 +114,7 @@
         tabs[tabId] = true;
         for (var i = 0; i < frameCount - 1; i++)
             setTimeout(function(scene, index) {
-              setIcon({path: 'images/' + scene + '/' + (index + 2) + fileExtension});
+              setIcon({path: '../images/' + scene + '/' + (index + 2) + fileExtension});
             }, i * frameLength, currentScene, i);
         var previousScene = currentScene;
         currentScene = getScene();
@@ -122,7 +122,7 @@
         for (var i = 0; i < frameCount; i++)
             setTimeout(function(scene, index) {
               setIcon({
-                path: 'images/' + scene + '/' + (frameCount - index) + fileExtension
+                path: '../images/' + scene + '/' + (frameCount - index) + fileExtension
               });
             }, (i + frameCount - 1) * frameLength, currentScene, i);
       }
