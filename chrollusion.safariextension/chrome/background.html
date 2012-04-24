@@ -74,70 +74,117 @@
 		sendResponse({referrerUrl: tab.url});
 	}
     else {
+
       // The Collusion data structure.
       var domain = request.domain;
       var domainName = domain.name;
-      if (!(domainName in log))
-          log[domainName] = {
-            host: domain.host,
-            referrers: {},
-            visited: false
-          };
+      if ( domainName == null )
+        smartTLD( 'domainName', domain.host );
 
       var referrerDomain = request.referrerDomain;
       var referrerName = referrerDomain.name;
+      if ( referrerName == null )
+        smartTLD( 'referrerName', referrerDomain.host );
       var referrerHost = referrerDomain.host;
-      if (!(referrerName in log))
-          log[referrerName] = {
-            host: referrerHost,
-            referrers: {}
-          };
-      log[referrerName].visited = true;
 
-      var referrers = log[domainName].referrers;
-      if (!(referrerName in referrers))
-          referrers[referrerName] = {
-            host: referrerHost,
-            types: [new Date() - startTime]
-          };
 
-      var types = referrers[referrerName].types;
-      var type = request.type;
-      types.indexOf(type) == -1 && types.push(type);
+      // Given a varname and hostname, intelligently makes use of what's already in the browser in terms of the public suffix list,
+      // and the code to handle that to get at the effective TLD of the hostname! Assign found TLD to the varname
+      function smartTLD( varname, hostname ) {
 
-      // A live update.
-      var popup = extension.getViews({type: 'popup'})[0];
-      popup && popup.graph && popup.graph.update(log);
+        var labels = hostname.split('.');
+        var walk = labels.pop();
+        walk = labels.pop() + '.' + walk;
 
-      // Animate if icon hasn't animated yet while on this URL.
-      if (!(tabId in tabs) && request.animate && localStorage.getItem("should_show_animation") != "0") {
-        tabs[tabId] = true;
-        for (var i = 0; i < frameCount - 1; i++)
-            setTimeout(function(scene, index) {
-              setIcon({path: 'images/' + scene + '/' + (index + 2) + fileExtension});
-            }, i * frameLength, currentScene, i);
-        var previousScene = currentScene;
-        currentScene = getScene();
-        scenes.push(previousScene);
-        for (var i = 0; i < frameCount; i++)
-            setTimeout(function(scene, index) {
-              setIcon({
-                path: 'images/' + scene + '/' + (frameCount - index) + fileExtension
-              });
-            }, (i + frameCount - 1) * frameLength, currentScene, i);
+        walktest();
+
+        function walktest() {
+          chrome.cookies.set(
+            { url: 'http://' + hostname, domain: walk, name: 'chrollusion__jf_walktest__01189998819991197253', value: 'test' },
+            function( succ ) {
+              if ( succ != null ) {	// !!--> WTH!!!! http://code.google.com/chrome/extensions/cookies.html#method-set is Wrong (or at best misleading?)?!!
+                eval( varname + ' = "' + succ.domain.slice(1) + '"' );
+                if ( referrerName && domainName )
+                  carryOn();
+              }
+              else {	// !! future-proofing when the documentation actually becomes correct?
+                walk = labels.pop() + '.' + walk;
+                walktest();
+              }
+            }
+          );
+        }
+
       }
 
-	  // If we haven't seen this 3rd-party domain here yet...
-	  if (tabs[tabId].all.indexOf(domainName) === -1) {
-	  	// Mark this 3rd-party domain as seen.
-		tabs[tabId].all.push(domainName);
-		// Update the icon badge.
-		setBadgeBackgroundColor && setBadgeBackgroundColor({ color: [ 255, 0, 0, 255 ], tabId: tabId });
-		setBadgeText && setBadgeText({ text: String(tabs[tabId].all.length), tabId: tabId });
-	  }
 
-      // Cleanup.
-      sendResponse({});
+      function carryOn() {
+        //name && name != extensionId && name != referrerName &&
+        if ( domainName == referrerName ) {
+          sendResponse({});
+          return;
+        }
+
+        if (!(domainName in log))
+            log[domainName] = {
+              host: domain.host,
+              referrers: {},
+              visited: false
+            };
+
+        if (!(referrerName in log))
+            log[referrerName] = {
+              host: referrerHost,
+              referrers: {}
+            };
+        log[referrerName].visited = true;
+
+        var referrers = log[domainName].referrers;
+        if (!(referrerName in referrers))
+            referrers[referrerName] = {
+              host: referrerHost,
+              types: [new Date() - startTime]
+            };
+   
+        var types = referrers[referrerName].types;
+        var type = request.type;
+        types.indexOf(type) == -1 && types.push(type);
+   
+        // A live update.
+        var popup = extension.getViews({type: 'popup'})[0];
+        popup && popup.graph && popup.graph.update(log);
+   
+        // Animate if icon hasn't animated yet while on this URL.
+        if (!(tabId in tabs) && request.animate && localStorage.getItem("should_show_animation") != "0") {
+          tabs[tabId] = true;
+          for (var i = 0; i < frameCount - 1; i++)
+              setTimeout(function(scene, index) {
+                setIcon({path: 'images/' + scene + '/' + (index + 2) + fileExtension});
+              }, i * frameLength, currentScene, i);
+          var previousScene = currentScene;
+          currentScene = getScene();
+          scenes.push(previousScene);
+          for (var i = 0; i < frameCount; i++)
+              setTimeout(function(scene, index) {
+                setIcon({
+                  path: 'images/' + scene + '/' + (frameCount - index) + fileExtension
+                });
+              }, (i + frameCount - 1) * frameLength, currentScene, i);
+        }
+   
+        // If we haven't seen this 3rd-party domain here yet...
+        if (tabs[tabId].all.indexOf(domainName) === -1) {
+        	// Mark this 3rd-party domain as seen.
+      	tabs[tabId].all.push(domainName);
+      	// Update the icon badge.
+      	setBadgeBackgroundColor && setBadgeBackgroundColor({ color: [ 255, 0, 0, 255 ], tabId: tabId });
+      	setBadgeText && setBadgeText({ text: String(tabs[tabId].all.length), tabId: tabId });
+        }
+   
+        // Cleanup.
+        sendResponse({});
+      }
+
     }
   });
 </script>
