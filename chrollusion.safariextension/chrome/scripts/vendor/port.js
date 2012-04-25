@@ -3,6 +3,8 @@ test_caching_port_c1 = function() {};
 
 // Chrome to Safari port
 // Author: Michael Gundlach (gundlach@gmail.com)
+//         "tabs", "browserAction", and additional "extension" API support by
+//         Brian Kennish <byoogle@gmail.com>
 // License: GPLv3 as part of adblockforchrome.googlecode.com
 //          or MIT if GPLv3 conflicts with your code's license.
 //
@@ -110,6 +112,22 @@ if (SAFARI) {
 
       getURL: function(path) { 
         return safari.extension.baseURI + path;
+      },
+
+      // The identifier must be "tab", "infobar", "notification", or "popup".
+      getViews: function(fetchProperties) {
+        var views = safari.extension.bars.concat(
+          safari.extension.menus,
+          safari.extension.popovers,
+          safari.extension.toolbarItems
+        );
+        var viewCount = views.length;
+
+        for (var i = 0; i < viewCount; i++) {
+          var view = views[i];
+          if (view.identifier == fetchProperties.type)
+              return [view.contentWindow];
+        }
       },
 
       sendRequest: (function() {
@@ -241,6 +259,66 @@ if (SAFARI) {
         addListener: function() {
           // CHROME PORT LIBRARY: onRequestExternal not supported.
         }
+      }
+    },
+
+    tabs: {
+      onUpdated: {
+        addListener: function(listener) {
+          safari.application.addEventListener(
+            'beforeNavigate', function(event) {
+              listener(event.target.id, {
+                status: 'loading',
+                url: event.target.url,
+                pinned: null
+              }, {
+                id: event.target.id,
+                index: null, // TODO: Traverse the "event.target.tabs" array.
+                windowId: null,
+                openerTabId: null,
+                highlighted: null,
+                active:
+                    event.target.id == event.target.browserWindow.activeTab.id,
+                pinned: null,
+                url: event.target.url,
+                title: event.target.title,
+                favIconUrl: null,
+                status: 'loading',
+                incognito: null
+              });
+            }, true
+          );
+
+          safari.application.addEventListener('navigate', function(event) {
+            listener(event.target.id, {
+              status: 'complete',
+              url: event.target.url,
+              pinned: null
+            }, {
+              id: event.target.id,
+              index: null, // TODO: Traverse the "event.target.tabs" array.
+              windowId: null,
+              openerTabId: null,
+              highlighted: null,
+              active:
+                  event.target.id == event.target.browserWindow.activeTab.id,
+              pinned: null,
+              url: event.target.url,
+              title: event.target.title,
+              favIconUrl: null,
+              status: 'complete',
+              incognito: null
+            });
+          }, true);
+        }
+      }
+    },
+
+    browserAction: {
+      // Compatible with one toolbar button.
+      setIcon: function(details) {
+        safari.extension.toolbarItems[0].image =
+            chrome.extension.getURL(details.path);
       }
     },
 

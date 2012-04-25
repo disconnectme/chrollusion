@@ -30,7 +30,7 @@
 				<key>Height</key>
 				<real>600</real>
 				<key>Identifier</key>
-				<string>popover</string>
+				<string>popup</string>
 				<key>Width</key>
 				<real>800</real>
 			</dict>
@@ -39,13 +39,13 @@
 		<array>
 			<dict>
 				<key>Identifier</key>
-				<string>toolbar</string>
+				<string>browser_action</string>
 				<key>Image</key>
 				<string>chrome/images/1/1.png</string>
 				<key>Label</key>
 				<string>Collusion for Safari</string>
 				<key>Popover</key>
-				<string>popover</string>
+				<string>popup</string>
 				<key>Tool Tip</key>
 				<string>Display the Collusion graph</string>
 			</dict>
