@@ -11,10 +11,11 @@ Collusion](https://github.com/toolness/collusion).
 
 ## Dev HOWTO
 
+0. Fork this repository.
 1. Switch to your working directory of choice.
-2. Clone the development repository:
+2. Clone the development repo:
 
-        git clone git://github.com/disconnectme/chrollusion.git
+        git clone git@github.com:[username]/chrollusion.git
 
 ### In Chrome
 
@@ -22,8 +23,10 @@ Collusion](https://github.com/toolness/collusion).
 4. Press **Load unpacked extension...** .
 5. Find your working directory.
 6. Under `chrollusion.safariextension`, select `chrome`.
-7. To test your changes, be sure to expand the extension listing then press
-   **Reload**.
+7. To test after you make a change, be sure to expand the extension listing then
+   press **Reload**.
+8. Push your changes.
+9. Send us pull requests.
 
 ### In Safari
 
@@ -31,7 +34,7 @@ TODO.
 
 ## Software used
 
-These libraries are bundled with the repo and needn’t be updated manually:
+These libraries are bundled with the project and needn’t be updated manually:
 
 * [jQuery](https://github.com/jquery/jquery)
 * [D3.js](https://github.com/mbostock/d3)
