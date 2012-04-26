@@ -19,7 +19,7 @@ Collusion](https://github.com/toolness/collusion).
 ### In Chrome
 
 3. Go to the wrench menu > **Tools** > **Extensions**.
-4. Press **Load unpacked extension...**.
+4. Press **Load unpacked extension...** .
 5. Find your working directory.
 6. Under `chrollusion.safariextension`, select `chrome`.
 7. To test your changes, be sure to expand the extension listing then press
