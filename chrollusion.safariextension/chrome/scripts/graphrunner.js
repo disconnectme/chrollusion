@@ -101,9 +101,11 @@ var GraphRunner = (function(jQuery, d3) {
         var img = $('<img>');
         if (d.trackerInfo)
           info.find("h2.domain").addClass("tracker");
+        var attribute = "src";
         var faviconName = "favicon";
-        img.addClass(faviconName + " " + harden(d.name));
-        setFavicon(d, faviconName, "src");
+        img.attr(attribute, "../images/favicon.png")
+           .addClass(faviconName + " " + harden(d.name));
+        setFavicon(d, faviconName, attribute);
         setDomainLink(info.find("a.domain"), d);
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });

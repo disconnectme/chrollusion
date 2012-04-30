@@ -1,6 +1,3 @@
-// TODO TEMP CACHING TEST
-test_caching_port_c1 = function() {};
-
 // Chrome to Safari port
 // Author: Michael Gundlach (gundlach@gmail.com)
 //         "tabs", "browserAction", and additional "extension" API support by
@@ -315,6 +312,14 @@ if (SAFARI) {
     },
 
     browserAction: {
+      setBadgeBackgroundColor: function() {
+        // No-op.
+      },
+
+      setBadgeText: function() {
+        // No-op.
+      },
+
       // Compatible with one toolbar button.
       setIcon: function(details) {
         safari.extension.toolbarItems[0].image =

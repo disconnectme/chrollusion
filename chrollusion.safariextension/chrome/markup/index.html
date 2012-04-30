@@ -26,12 +26,9 @@
       <li id="reset-graph">Reset the graph</li>
       <!-- Nobody cares about exporting. -->
       <li id="hide-ui">Hide the sidebar</li>
-      <li id="show-instructions">Show the instructions</li>
+      <li id="show-badge"></li>
+      <li class="invisible" id="show-instructions">Show the instructions</li>
     </ul>
-	<form name="checkboxes">
-		<label><input type="checkbox" id="show-animation" data-storage="should_show_animation" data-default="1" />Animate Extension Icon</label>
-		<label><input type="checkbox" id="show-badge" data-storage="should_show_badge" data-default="1" />Show Count in Icon</label>
-	</form>
   </div> <!-- end of settingsmenu -->
   <p class="privacy-policy"><strong>Privacy:</strong> We collect info about the sites you go to only to illustrate how they’re connected. This info is stored locally on your computer and can be deleted anytime by resetting the graph or quitting your browser.</p>
   </div> <!-- End of #sidebar-content -->
@@ -81,9 +78,12 @@ function getJsonNoMatterWhat(url, callback) {
 var graph;
 
 $(window).ready(function() {
-  var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
-  var addon = CollusionAddon;
   var backgroundPage = chrome.extension.getBackgroundPage();
+  var query = chrome.tabs.query;
+  var setBadgeText = chrome.browserAction.setBadgeText;
+  var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
+  var badgeShown = backgroundPage.deserialize(localStorage.badgeShown);
+  var addon = CollusionAddon;
 
   if (SAFARI) {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
@@ -91,6 +91,11 @@ $(window).ready(function() {
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
   $("#domain-infos").hide();
+  if (badgeShown) {
+    $("#show-badge").html("Hide the tracker counter");
+  } else {
+    $("#show-badge").addClass("invisible").html("Show the tracker counter");
+  }
   $("#show-instructions").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
@@ -123,6 +128,30 @@ $(window).ready(function() {
         $("#sidebar, #domain-infos, #show-instructions").slideUp('fast');
         window.setTimeout(function() { window.location.reload(); }, 200);
       });
+      $("#show-badge").click(function() {
+        localStorage.badgeShown = badgeShown = !badgeShown;
+        if (badgeShown) {
+          $("#show-badge").removeClass("invisible").html("Hide the tracker counter");
+          query({}, function(tabs) {
+            var tabCount = tabs.length;
+            for (var i = 0; i < tabCount; i++) {
+              var tabId = tabs[i].id;
+              setBadgeText({
+                text: (Object.keys(backgroundPage.tabs[tabId] || {}).length || '') + '',
+                tabId: tabId
+              });
+            }
+          });
+        } else {
+          $("#show-badge").addClass("invisible").html("Show the tracker counter");
+          query({}, function(tabs) {
+            var tabCount = tabs.length;
+            for (var i = 0; i < tabCount; i++) {
+              setBadgeText({text: '', tabId: tabs[i].id});
+            }
+          });
+        }
+      });
       $("#show-instructions").click(function() {
         $("#domain-infos, #show-instructions").hide();
         $(".live-data").show();
@@ -131,19 +160,6 @@ $(window).ready(function() {
         delete localStorage.sidebarCollapsed;
         $("#show-ui").slideUp(100);
         window.setTimeout(function() { window.location.reload(); }, 100);
-      });
-	  
-	  var $checkboxes = $("#show-animation, #show-badge");
-	  $checkboxes.each(function (i, box) {
-		var $box = $(box);
-		var storage_var = $box.attr("data-storage");
-		var default_val = $box.attr("data-default");
-		var pref = localStorage.getItem(storage_var);
-		if (pref === null) pref = default_val;
-		$box.prop("checked", Boolean(parseInt(pref, 10)));
-		$box.change(function (e) {
-			localStorage.setItem(storage_var, ($box.prop("checked") ? "1" : "0"));
-		});
       });
     }
   });
