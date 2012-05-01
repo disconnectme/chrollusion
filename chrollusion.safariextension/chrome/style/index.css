@@ -166,7 +166,6 @@ ul {
 div.settings-menu {
   padding: 5px;
   pointer-events: auto;
-  color: white;
 }
 
 div.settings-menu > ul {
@@ -176,19 +175,24 @@ div.settings-menu > ul {
   font-size: 8pt;
 }
 
-div.settings-menu > ul > li, div.settings-menu.collapsed {
+div.settings-menu > ul > li,
+div.settings-menu.collapsed,
+div.settings-menu > ul > li.invisible:hover {
   cursor: pointer;
   padding: 5px;
   margin-top: 5px;
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.75);
+  color: white;
 }
 
 div.settings-menu > ul > li:first-child {
   margin-top: 0px;
 }
 
-div.settings-menu > ul > li:hover, div.settings-menu.collapsed:hover {
+div.settings-menu > ul > li.invisible,
+div.settings-menu > ul > li:hover,
+div.settings-menu.collapsed:hover {
   background: white;
   color: black;
 }

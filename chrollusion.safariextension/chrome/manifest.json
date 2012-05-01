@@ -1,8 +1,8 @@
 {
   "name": "Collusion for Chrome",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Visualize the invisible websites that track you.",
-  "icons": {"48": "48.png", "128": "128.png"},
+  "icons": {"48": "images/48.png", "128": "images/128.png"},
   "permissions": [
     "chrome://favicon/",
     "contextMenus",
@@ -15,14 +15,14 @@
     "http://*/*",
     "https://*/*"
   ],
-  "background_page": "background.html",
+  "background_page": "markup/background.html",
   "browser_action": {
     "default_title": "Display the Collusion graph",
-    "default_popup": "index.html"
+    "default_popup": "markup/index.html"
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["content.js"],
+    "js": ["scripts/vendor/port.js", "scripts/content.js"],
     "run_at": "document_start",
     "all_frames": true
   }]
