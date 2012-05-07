@@ -18,28 +18,31 @@
   Authors (one per line):
 
     Brian Kennish <byoogle@gmail.com>
+    Jeffrey Lim <jfs.world@gmail.com>
 */
 
-/*
-  Parses a URL into a domain name and hostname, regex free.
-  **NOTE: IF the hostname is not an IP address, then leave the parsing of the TLD to smartTLD() in background.html
-*/
+/* Parses a URL into a domain name and hostname, regex free. */
 function getDomain(url) {
   anchor.href = url;
   var host = anchor.hostname;
   var labels = host.split('.');
-  return {
-    name:
-        isNaN(parseFloat(labels[labels.length - 1])) ?
-            null : host,
-                // IP addresses should't be munged.
-    host: host
-  };
+  var labelCount = labels.length - 1;
+  var name = labels.slice(-2).join('.');
+
+  // IP addresses shouldn't be munged.
+  if (isNaN(parseFloat(labels[labelCount]))) {
+    for (var i = labelCount; i > 1; i--)
+        if (tlds[labels.slice(-i).join('.')])
+            name = labels.slice(-i - 1).join('.');
+  } else name = host;
+
+  return {name: name, host: host};
 }
 
 /* Constants. */
 var extension = chrome.extension;
 var sendRequest = extension.sendRequest;
+var tlds = {};
 var anchor = document.createElement('a');
 var animate = true;
 
@@ -49,6 +52,7 @@ var animate = true;
   fingerprinting, to name a few) and we don't bug the user with sound effects.
 */
 sendRequest({initialized: true}, function(response) {
+  tlds = response.tlds;
   var extensionId = getDomain(extension.getURL('')).name;
   var referrerDomain = getDomain(response.referrerUrl);
   var referrerName = referrerDomain.name;
@@ -57,9 +61,8 @@ sendRequest({initialized: true}, function(response) {
   document.addEventListener('beforeload', function(event) {
     var domain = getDomain(event.url);
     var name = domain.name;
-    //---name && name != extensionId && name != referrerName &&
+    name && name != extensionId && name != referrerName &&
         sendRequest({
-          extensionId: extensionId,
           domain: {name: name, host: domain.host},
           referrerDomain: {name: referrerName, host: referrerHost},
           type: event.target.nodeName.toLowerCase(),
