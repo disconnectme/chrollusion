@@ -15,7 +15,7 @@ g.node.unrelated-domain circle.site {
   stroke: #dfdfdf;
 }
 
-g.node.unrelated-domain circle.tracker {
+g.node.unrelated-domain .tracker {
   stroke: #efdfaf;
 }
 

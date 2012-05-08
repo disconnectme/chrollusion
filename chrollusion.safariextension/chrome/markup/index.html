@@ -75,16 +75,16 @@ function getJsonNoMatterWhat(url, callback) {
     }});
 }
 
+var backgroundPage = chrome.extension.getBackgroundPage();
+var query = chrome.tabs.query;
+var setBadgeText = chrome.browserAction.setBadgeText;
+var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
+var trackingBlocked = true;
+var badgeShown = backgroundPage.deserialize(localStorage.badgeShown);
+var addon = CollusionAddon;
 var graph;
 
 $(window).ready(function() {
-  var backgroundPage = chrome.extension.getBackgroundPage();
-  var query = chrome.tabs.query;
-  var setBadgeText = chrome.browserAction.setBadgeText;
-  var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
-  var badgeShown = backgroundPage.deserialize(localStorage.badgeShown);
-  var addon = CollusionAddon;
-
   if (SAFARI) {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
   } else {

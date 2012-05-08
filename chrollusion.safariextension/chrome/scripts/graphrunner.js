@@ -105,7 +105,8 @@ var GraphRunner = (function(jQuery, d3) {
         var faviconName = "favicon";
         img.attr(attribute, "../images/favicon.png")
            .addClass(faviconName + " " + harden(d.name));
-        setFavicon(d, faviconName, attribute);
+        if (!trackingBlocked || !d.trackerInfo)
+          setFavicon(d, faviconName, attribute);
         setDomainLink(info.find("a.domain"), d);
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });
@@ -223,7 +224,7 @@ var GraphRunner = (function(jQuery, d3) {
 
       node.transition()
           .duration(1000)
-          .attr("r", radius);
+          .attr("r", function(d) { return radius(d); });
 
       // For each node, create svg group <g> to hold circle, image, and title
       var gs = node.enter().append("svg:g")
@@ -237,7 +238,7 @@ var GraphRunner = (function(jQuery, d3) {
               return;
             /* Hide all lines except the ones going in or out of this node;
              * make those ones bold and show the triangles on the ends */
-            vis.selectAll("line").classed("hidden", true);
+            vis.selectAll("line:not(.node)").classed("hidden", true);
             selectArcs(d).attr("marker-end", "url(#Triangle)")
                   .classed("hidden", false).classed("bold", true);
             showDomainInfo(d);
@@ -254,7 +255,7 @@ var GraphRunner = (function(jQuery, d3) {
             });
           })
           .on("mouseout", function(d) {
-            vis.selectAll("line").classed("hidden", false);
+            vis.selectAll("line:not(.node)").classed("hidden", false);
             selectArcs(d).attr("marker-end", null).classed("bold", false);
             d3.selectAll("g.node").classed("unrelated-domain", false);
             d3.select("#domain-label").classed("hidden", true);
@@ -287,7 +288,8 @@ var GraphRunner = (function(jQuery, d3) {
         gs.append("svg:image")
           .attr("class", function(d) {
             var className = "node";
-            setFavicon(d, className, "href");
+            if (!trackingBlocked || !d.trackerInfo)
+              setFavicon(d, className, "href");
             return className + " " + harden(d.name);
           })
           .attr("width", "16")
@@ -295,6 +297,19 @@ var GraphRunner = (function(jQuery, d3) {
           .attr("x", "-8") // offset to make 16x16 favicon appear centered
           .attr("y", "-8")
           .attr("xlink:href", "../images/favicon.png");
+      }
+
+      // Ghostbustersification.
+      if (trackingBlocked) {
+        gs.append("svg:line")
+          .attr("x1", "-8")
+          .attr("y1", "-8")
+          .attr("x2", "8")
+          .attr("y2", "8")
+          .attr("class", function(d) {
+            return "node round-border " + getClassForSite(d);
+          })
+          .classed("hidden", function(d) { return !d.trackerInfo; });
       }
 
       return node;
