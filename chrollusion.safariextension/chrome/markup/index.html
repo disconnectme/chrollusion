@@ -17,7 +17,7 @@
   <div class="live-data">
     <p>Browse the web normally. As you do, the graph in this popup will change and the icon in the toolbar will animate. Each circle in the graph represents a site that’s been sent some of your personal info.</p>
     <p>Circles with a halo are sites you’ve visited. Circles without a halo are sites you haven’t.</p>
-    <p>Circles in <span class="tracker">red</span> are confirmed tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
+    <p>Circles in <span class="tracker">red</span> are known tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
     <p>Mouse over a circle to view that site’s tracking footprint. Drag a circle to reposition the graph.</p>
   </div> <!-- end of live-data -->
   <div id="domain-infos"></div> <!-- Templates are copied into here -->
@@ -35,6 +35,7 @@
 </div> <!-- End of #sidebar -->
 <div id="chart"></div><!-- The d3 layout graph will go inside this div -->
 <div class="settings-menu collapsed" id="show-ui">+</div>
+<div class="settings-menu collapsed" id="block-tracking"></div>
 </div>
 <div id="addon-installation-detected" style="display: none;">
   Collusion add-on detected! Reload this page to see your graph.
@@ -78,9 +79,10 @@ function getJsonNoMatterWhat(url, callback) {
 var backgroundPage = chrome.extension.getBackgroundPage();
 var query = chrome.tabs.query;
 var setBadgeText = chrome.browserAction.setBadgeText;
+var deserialize = backgroundPage.deserialize;
 var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
-var trackingBlocked = true;
-var badgeShown = backgroundPage.deserialize(localStorage.badgeShown);
+var trackingBlocked = deserialize(localStorage.trackingBlocked);
+var badgeShown = deserialize(localStorage.badgeShown);
 var addon = CollusionAddon;
 var graph;
 
@@ -97,6 +99,11 @@ $(window).ready(function() {
     $("#show-badge").addClass("invisible").html("Show the tracker counter");
   }
   $("#show-instructions").hide();
+  if (trackingBlocked) {
+    $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
+  } else {
+    $("#block-tracking").html("Block known tracking sites");
+  }
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -160,6 +167,10 @@ $(window).ready(function() {
         delete localStorage.sidebarCollapsed;
         $("#show-ui").slideUp(100);
         window.setTimeout(function() { window.location.reload(); }, 100);
+      });
+      $("#block-tracking").click(function() {
+        localStorage.trackingBlocked = !trackingBlocked;
+        window.location.reload();
       });
     }
   });

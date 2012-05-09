@@ -198,13 +198,32 @@ div.settings-menu.collapsed:hover {
 }
 
 div.settings-menu.collapsed {
-  display: none;
   position: absolute;
   top: 15px;
-  left: 20px;
-  width: 10px;
+  border: 1px solid white;
   text-align: center;
   font-size: 8pt;
+}
+
+#show-ui {
+  display: none;
+  left: 20px;
+  width: 10px;
+}
+
+#show-ui:hover {
+  border-color: black;
+}
+
+#block-tracking {
+  right: 20px;
+  background: #d62728;
+}
+
+#block-tracking.blocked, #block-tracking:hover {
+  border-color: #d62728;
+  background: white;
+  color: #d62728;
 }
 
 #deployment-info {
