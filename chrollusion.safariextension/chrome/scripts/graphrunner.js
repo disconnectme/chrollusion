@@ -309,7 +309,9 @@ var GraphRunner = (function(jQuery, d3) {
           .attr("class", function(d) {
             return "node round-border " + getClassForSite(d);
           })
-          .classed("hidden", function(d) { return !d.trackerInfo; });
+          .classed("hidden", function(d) {
+            return d.wasVisited || !d.trackerInfo;
+          });
       }
 
       return node;

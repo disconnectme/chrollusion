@@ -215,9 +215,11 @@ div.settings-menu.collapsed {
   border-color: black;
 }
 
-#block-tracking {
+#block-tracking, #block-tracking.blocked:hover {
   right: 20px;
+  border-color: white;
   background: #d62728;
+  color: white;
 }
 
 #block-tracking.blocked, #block-tracking:hover {

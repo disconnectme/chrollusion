@@ -83,6 +83,7 @@
         (SAFARI ? 'chrome' : '') + '/images/' + currentScene + '/1' +
             fileExtension
   });
+  browserAction.setBadgeBackgroundColor({color: [214, 39, 40, 255]});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
