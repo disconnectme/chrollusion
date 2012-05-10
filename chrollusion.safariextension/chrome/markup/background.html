@@ -204,15 +204,24 @@
     // Popup opened for the first time
     if (!localStorage['chrollusion_first_time']) {
       localStorage['chrollusion_first_time'] = '1';
-      mixpanel.track('chrollusion opened for first time');
+      mixpanel.track('chrollusion opened for first time', {'on': new Date()});
     }
 
     // Popup opened time
-    mixpanel.track('chrollusion opened at ' + new Date());
+    var averageTime, openedTime, closedTime;
+
+    // Opened Time
+    openedTime = new Date();
 
     port.onDisconnect.addListener(function(e) {
+      // Closed Time
+      closedTime = new Date();
+
+      // Popup average time opened in seconds
+      averageTime = (closedTime - openedTime) / 1000;
+
       // Popup closed time
-      mixpanel.track('chrollusion closed at ' + new Date());
+      mixpanel.track('chrollusion popup opened', {'time': averageTime});
     });
   });
 </script>
