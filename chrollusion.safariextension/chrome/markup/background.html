@@ -38,6 +38,7 @@
   var browserAction = chrome.browserAction;
   var setIcon = browserAction.setIcon;
   var tlds = deserialize(localStorage.tlds) || {};
+  var blacklist = deserialize(localStorage.blacklist) || {};
   var tabs = {};
   var log = {};
   var startTime = new Date();
@@ -78,6 +79,13 @@
     );
   });
 
+  // TODO: This file is already loaded elsewhere.
+  $.getJSON('../data/trackers.json', function(data) {
+    var siteCount = data.length;
+    for (var i = 0; i < siteCount; i++) blacklist[data[i].domain] = true;
+    localStorage.blacklist = JSON.stringify(blacklist);
+  });
+
   setIcon({
     path:
         (SAFARI ? 'chrome' : '') + '/images/' + currentScene + '/1' +
@@ -94,7 +102,13 @@
   extension.onRequest.addListener(function(request, sender, sendResponse) {
     var tab = sender.tab;
 
-    if (request.initialized) sendResponse({tlds: tlds, referrerUrl: tab.url});
+    if (request.initialized)
+        sendResponse({
+          tlds: tlds,
+          referrerUrl: tab.url,
+          trackingBlocked: deserialize(localStorage.trackingBlocked),
+          blacklist: blacklist
+        });
     else {
       // The Collusion data structure.
       var domain = request.domain;

@@ -1567,10 +1567,6 @@
 	"domain": "googlesyndication.com",
 	"block_cookies": "*"
 },{
-	"network_id": "418",
-	"domain": "gravity.com",
-	"block_cookies": "*"
-},{
 	"network_id": "477",
 	"domain": "greystripe.com",
 	"block_cookies": "*"

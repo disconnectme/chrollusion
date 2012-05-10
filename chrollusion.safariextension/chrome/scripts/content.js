@@ -57,16 +57,25 @@ sendRequest({initialized: true}, function(response) {
   var referrerDomain = getDomain(response.referrerUrl);
   var referrerName = referrerDomain.name;
   var referrerHost = referrerDomain.host;
+  var trackingBlocked = response.trackingBlocked;
+  var blacklist = response.blacklist;
 
   document.addEventListener('beforeload', function(event) {
     var domain = getDomain(event.url);
     var name = domain.name;
-    name && name != extensionId && name != referrerName &&
-        sendRequest({
-          domain: {name: name, host: domain.host},
-          referrerDomain: {name: referrerName, host: referrerHost},
-          type: event.target.nodeName.toLowerCase(),
-          animate: animate && !(animate = false)
-        });
+
+    if (name && name != extensionId && name != referrerName) {
+      if (trackingBlocked && blacklist[name]) {
+        event.preventDefault();
+        $(event.target).hide();
+      }
+
+      sendRequest({
+        domain: {name: name, host: domain.host},
+        referrerDomain: {name: referrerName, host: referrerHost},
+        type: event.target.nodeName.toLowerCase(),
+        animate: animate && !(animate = false)
+      });
+    }
   }, true);
 });
