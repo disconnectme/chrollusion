@@ -70,6 +70,8 @@
 <!-- End Social Sharing Stuff -->
 
 <div id="update">
+  <a href="#" id="js-share-fb">Facebook</a>
+  <a href="#" id="js-share-tweet">Tweet</a>
 </div>
 
 <script src="../scripts/vendor/d3.layout.js"></script>
@@ -193,6 +195,15 @@ $(window).ready(function() {
         window.location.reload();
       });
     }
+  });
+
+  $('#js-share-fb').click(function(e) {
+    e.preventDefault();
+    $('a[name="fb_share"]').click();
+  });
+  $('#js-share-tweet').click(function(e) {
+    e.preventDefault();
+    window.open("https://twitter.com/intent/tweet?original_referer=&source=tweetbutton&text=Collusion%20for%20Chrome&url=https%3A%2F%2Fdisconnect.me%2Ftools");
   });
 });
 </script>
