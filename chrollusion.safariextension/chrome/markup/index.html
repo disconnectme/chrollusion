@@ -107,6 +107,7 @@ var badgeShown = deserialize(localStorage.badgeShown);
 var updateClosed = deserialize(localStorage.updateClosed);
 var addon = CollusionAddon;
 var graph;
+var popupOpenedAt = new Date();
 
 $(window).ready(function() {
   if (SAFARI) {
@@ -198,6 +199,14 @@ $(window).ready(function() {
         window.location.reload();
       });
       $("#close-update").click(function() {
+        chrome.extension.sendRequest({
+          track: {
+            name: 'chrollusion modal closed',
+            prop: {
+              time: ((new Date() - popupOpenedAt) / 1000)
+            }
+          }
+        });
         localStorage.updateClosed = true;
         $("#update").hide();
         setBadgeText({text: ''});

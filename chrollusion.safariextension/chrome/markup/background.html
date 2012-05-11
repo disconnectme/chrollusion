@@ -230,7 +230,11 @@
 
   chrome.extension.onRequest.addListener(function(req) {
     if (req.track) {
-      mixpanel.track(req.track.name);
+      if (req.track.prop) {
+        mixpanel.track(req.track.name, req.track.prop);
+      } else {
+        mixpanel.track(req.track.name);
+      }
     }
   });
 </script>
