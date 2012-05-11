@@ -227,5 +227,11 @@
       mixpanel.track('chrollusion popup opened', {'time': averageTime});
     });
   });
+
+  chrome.extension.onRequest.addListener(function(req) {
+    if (req.track) {
+      mixpanel.track(req.track.name);
+    }
+  });
 </script>
 <!--End Mixpanel Stuff-->

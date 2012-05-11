@@ -207,10 +207,16 @@ $(window).ready(function() {
 
   $('#js-share-fb').click(function(e) {
     e.preventDefault();
+    chrome.extension.sendRequest({
+      track: { name: 'chrollusion fb-share clicked' }
+    });
     $('a[name="fb_share"]').click();
   });
   $('#js-share-tweet').click(function(e) {
     e.preventDefault();
+    chrome.extension.sendRequest({
+      track: { name: 'chrollusion tweet clicked' }
+    });
     window.open("https://twitter.com/intent/tweet?original_referer=&source=tweetbutton&text=Collusion%20for%20Chrome&url=https%3A%2F%2Fdisconnect.me%2Ftools");
   });
 });
