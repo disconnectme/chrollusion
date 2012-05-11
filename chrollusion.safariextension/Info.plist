@@ -58,6 +58,7 @@
 			<key>Start</key>
 			<array>
 				<string>chrome/scripts/vendor/port.js</string>
+				<string>chrome/scripts/vendor/jquery.min.js</string>
 				<string>chrome/scripts/content.js</string>
 			</array>
 		</dict>
