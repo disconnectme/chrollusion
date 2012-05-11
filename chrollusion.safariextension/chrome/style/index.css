@@ -241,4 +241,14 @@ html.deployment-production #deployment-info {
   display: none;
 }
 
+#update {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  opacity: .9;
+  background: blue;
+  width: 760px;
+  height: 560px;
+}
+
 

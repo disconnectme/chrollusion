@@ -54,6 +54,7 @@
     </div>
   </div>
 </div>
+<div id="update"></div>
 <script src="../scripts/vendor/d3.layout.js"></script>
 <script src="../scripts/vendor/d3.geom.js"></script>
 <script src="../scripts/vendor/jquery.min.js"></script>
@@ -90,6 +91,7 @@ $(window).ready(function() {
   if (SAFARI) {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
+    $("#update").hide();
   } else {
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
