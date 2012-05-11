@@ -251,4 +251,11 @@ html.deployment-production #deployment-info {
   height: 560px;
 }
 
-
+#social_share {
+  position: absolute;
+  top: -10000px;
+  left: -10000px;
+  width: 300px;
+  height: 300px;
+  z-index: 999;
+}
