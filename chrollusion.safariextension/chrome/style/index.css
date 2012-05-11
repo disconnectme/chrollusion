@@ -245,10 +245,34 @@ html.deployment-production #deployment-info {
   position: absolute;
   left: 20px;
   top: 20px;
-  opacity: .9;
-  background: blue;
+  background: url(../images/update.png);
   width: 760px;
   height: 560px;
+  text-align: center;
+}
+
+.share {
+  display: inline-block;
+  margin-top: 455px;
+  background: url(../images/share.png);
+  width: 200px;
+  height: 60px;
+  cursor: pointer;
+}
+
+#js-share-tweet {
+  margin-left: 20px;
+  background-position: 0 60px;
+}
+
+#close-update {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  background: url(../images/close.png);
+  width: 54px;
+  height: 54px;
+  cursor: pointer;
 }
 
 #social_share {
