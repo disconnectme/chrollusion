@@ -1,6 +1,6 @@
 {
   "name": "Collusion for Chrome",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Visualize the invisible websites that track you.",
   "icons": {"48": "images/48.png", "128": "images/128.png"},
   "permissions": [
@@ -22,7 +22,11 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["scripts/vendor/port.js", "scripts/content.js"],
+    "js": [
+      "scripts/vendor/port.js",
+      "scripts/vendor/jquery.min.js",
+      "scripts/content.js"
+    ],
     "run_at": "document_start",
     "all_frames": true
   }]

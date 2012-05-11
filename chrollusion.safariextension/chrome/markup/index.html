@@ -17,7 +17,7 @@
   <div class="live-data">
     <p>Browse the web normally. As you do, the graph in this popup will change and the icon in the toolbar will animate. Each circle in the graph represents a site that’s been sent some of your personal info.</p>
     <p>Circles with a halo are sites you’ve visited. Circles without a halo are sites you haven’t.</p>
-    <p>Circles in <span class="tracker">red</span> are confirmed tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
+    <p>Circles in <span class="tracker">red</span> are known tracking sites. Circles in <span class="site">gray</span> aren’t, but may still track you.</p>
     <p>Mouse over a circle to view that site’s tracking footprint. Drag a circle to reposition the graph.</p>
   </div> <!-- end of live-data -->
   <div id="domain-infos"></div> <!-- Templates are copied into here -->
@@ -35,6 +35,7 @@
 </div> <!-- End of #sidebar -->
 <div id="chart"></div><!-- The d3 layout graph will go inside this div -->
 <div class="settings-menu collapsed" id="show-ui">+</div>
+<div class="settings-menu collapsed" id="block-tracking"></div>
 </div>
 <div id="addon-installation-detected" style="display: none;">
   Collusion add-on detected! Reload this page to see your graph.
@@ -53,6 +54,27 @@
     </div>
   </div>
 </div>
+
+<!-- Start Social Sharing Stuff -->
+<div id="social_share">
+  <!-- Start Twitter Stuff-->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://disconnect.me/tools">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https:////platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <!-- End Twitter Stuff-->
+
+  <!-- Start Facebook Stuff-->
+  <a name="fb_share" share_url="https://disconnect.me/tools"></a>
+  <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+  <!-- End Facebook Stuff-->
+</div>
+<!-- End Social Sharing Stuff -->
+
+<div id="update">
+  <a id="js-share-fb">Like</a>
+  <a id="js-share-tweet">Tweet</a>
+  <a id="close-update">Close</a>
+</div>
+
 <script src="../scripts/vendor/d3.layout.js"></script>
 <script src="../scripts/vendor/d3.geom.js"></script>
 <script src="../scripts/vendor/jquery.min.js"></script>
@@ -75,18 +97,22 @@ function getJsonNoMatterWhat(url, callback) {
     }});
 }
 
+var backgroundPage = chrome.extension.getBackgroundPage();
+var query = chrome.tabs.query;
+var setBadgeText = chrome.browserAction.setBadgeText;
+var deserialize = backgroundPage.deserialize;
+var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
+var trackingBlocked = deserialize(localStorage.trackingBlocked);
+var badgeShown = deserialize(localStorage.badgeShown);
+var updateClosed = deserialize(localStorage.updateClosed);
+var addon = CollusionAddon;
 var graph;
 
 $(window).ready(function() {
-  var backgroundPage = chrome.extension.getBackgroundPage();
-  var query = chrome.tabs.query;
-  var setBadgeText = chrome.browserAction.setBadgeText;
-  var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
-  var badgeShown = backgroundPage.deserialize(localStorage.badgeShown);
-  var addon = CollusionAddon;
-
   if (SAFARI) {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
+    $("#show-badge").hide();
+    updateClosed = true;
   } else {
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
@@ -97,6 +123,12 @@ $(window).ready(function() {
     $("#show-badge").addClass("invisible").html("Show the tracker counter");
   }
   $("#show-instructions").hide();
+  if (trackingBlocked) {
+    $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
+  } else {
+    $("#block-tracking").html("Block known tracking sites");
+  }
+  updateClosed && $("#update").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -161,7 +193,29 @@ $(window).ready(function() {
         $("#show-ui").slideUp(100);
         window.setTimeout(function() { window.location.reload(); }, 100);
       });
+      $("#block-tracking").click(function() {
+        localStorage.trackingBlocked = !trackingBlocked;
+        window.location.reload();
+      });
+      $("#close-update").click(function() {
+        localStorage.updateClosed = true;
+        $("#update").hide();
+        setBadgeText({text: ''});
+      });
     }
   });
+
+  $('#js-share-fb').click(function(e) {
+    e.preventDefault();
+    $('a[name="fb_share"]').click();
+  });
+  $('#js-share-tweet').click(function(e) {
+    e.preventDefault();
+    window.open("https://twitter.com/intent/tweet?original_referer=&source=tweetbutton&text=Collusion%20for%20Chrome&url=https%3A%2F%2Fdisconnect.me%2Ftools");
+  });
 });
+</script>
+
+<script type="text/javascript">
+  chrome.extension.connect();
 </script>

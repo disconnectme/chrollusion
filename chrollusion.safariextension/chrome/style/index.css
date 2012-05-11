@@ -15,7 +15,7 @@ g.node.unrelated-domain circle.site {
   stroke: #dfdfdf;
 }
 
-g.node.unrelated-domain circle.tracker {
+g.node.unrelated-domain .tracker {
   stroke: #efdfaf;
 }
 
@@ -198,13 +198,34 @@ div.settings-menu.collapsed:hover {
 }
 
 div.settings-menu.collapsed {
-  display: none;
   position: absolute;
   top: 15px;
-  left: 20px;
-  width: 10px;
+  border: 1px solid white;
   text-align: center;
   font-size: 8pt;
+}
+
+#show-ui {
+  display: none;
+  left: 20px;
+  width: 10px;
+}
+
+#show-ui:hover {
+  border-color: black;
+}
+
+#block-tracking, #block-tracking.blocked:hover {
+  right: 20px;
+  border-color: white;
+  background: #d62728;
+  color: white;
+}
+
+#block-tracking.blocked, #block-tracking:hover {
+  border-color: #d62728;
+  background: white;
+  color: #d62728;
 }
 
 #deployment-info {
@@ -220,4 +241,21 @@ html.deployment-production #deployment-info {
   display: none;
 }
 
+#update {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  opacity: .9;
+  background: blue;
+  width: 760px;
+  height: 560px;
+}
 
+#social_share {
+  position: absolute;
+  top: -10000px;
+  left: -10000px;
+  width: 300px;
+  height: 300px;
+  z-index: 999;
+}

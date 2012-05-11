@@ -627,20 +627,12 @@
 	"domain": "airpush.com",
 	"block_cookies": "*"
 },{
-	"network_id": "9",
-	"domain": "akamai.net",
-	"block_cookies": "*"
-},{
 	"network_id": "220",
 	"domain": "amadesa.com",
 	"block_cookies": "*"
 },{
 	"network_id": "125",
 	"domain": "amazon-adsystem.com",
-	"block_cookies": "*"
-},{
-	"network_id": "125",
-	"domain": "amazon.com",
 	"block_cookies": "*"
 },{
 	"network_id": "72",
@@ -671,10 +663,6 @@
 	"domain": "appenda.com",
 	"block_cookies": "*"
 },{
-	"network_id": "505",
-	"domain": "apple.com",
-	"block_cookies": "*"
-},{
 	"network_id": "335",
 	"domain": "applifier.com",
 	"block_cookies": "*"
@@ -693,10 +681,6 @@
 },{
 	"network_id": "14",
 	"domain": "aquantive.com",
-	"block_cookies": "*"
-},{
-	"network_id": "13",
-	"domain": "ask.com",
 	"block_cookies": "*"
 },{
 	"network_id": "125",
@@ -737,10 +721,6 @@
 },{
 	"network_id": "363",
 	"domain": "audienceiq.com",
-	"block_cookies": "*"
-},{
-	"network_id": "332",
-	"domain": "autotrader.com",
 	"block_cookies": "*"
 },{
 	"network_id": "65",
@@ -857,10 +837,6 @@
 },{
 	"network_id": "190",
 	"domain": "bridgetrack.com",
-	"block_cookies": "*"
-},{
-	"network_id": "91",
-	"domain": "brightcove.com",
 	"block_cookies": "*"
 },{
 	"network_id": "459",
@@ -1507,10 +1483,6 @@
 	"domain": "flashtalking.com",
 	"block_cookies": "*"
 },{
-	"network_id": "67",
-	"domain": "flickr.com",
-	"block_cookies": "*"
-},{
 	"network_id": "78",
 	"domain": "flingwebads.com",
 	"block_cookies": "*"
@@ -1523,16 +1495,8 @@
 	"domain": "flytxt.com",
 	"block_cookies": "*"
 },{
-	"network_id": "343",
-	"domain": "forbesmedia.com",
-	"block_cookies": "*"
-},{
 	"network_id": "132",
 	"domain": "foxnetworks.com",
-	"block_cookies": "*"
-},{
-	"network_id": "35",
-	"domain": "freewheel.tv",
 	"block_cookies": "*"
 },{
 	"network_id": "65",
@@ -1575,18 +1539,6 @@
 	"domain": "gigcount.com",
 	"block_cookies": "*"
 },{
-	"network_id": "137",
-	"domain": "gigya-inc.com",
-	"block_cookies": "*"
-},{
-	"network_id": "137",
-	"domain": "gigya.com",
-	"block_cookies": "*"
-},{
-	"network_id": "321",
-	"domain": "glam.com",
-	"block_cookies": "*"
-},{
 	"network_id": "321",
 	"domain": "glammedia.com",
 	"block_cookies": "*"
@@ -1613,10 +1565,6 @@
 },{
 	"network_id": "37",
 	"domain": "googlesyndication.com",
-	"block_cookies": "*"
-},{
-	"network_id": "418",
-	"domain": "gravity.com",
 	"block_cookies": "*"
 },{
 	"network_id": "477",
@@ -1975,14 +1923,6 @@
 	"domain": "lijit.com",
 	"block_cookies": "*"
 },{
-	"network_id": "635",
-	"domain": "linkedin.com",
-	"block_cookies": "*"
-},{
-	"network_id": "44",
-	"domain": "live.com",
-	"block_cookies": "*"
-},{
 	"network_id": "689",
 	"domain": "liveintent.com",
 	"block_cookies": "*"
@@ -2139,10 +2079,6 @@
 	"domain": "medley.com",
 	"block_cookies": "*"
 },{
-	"network_id": "307",
-	"domain": "meebo.com",
-	"block_cookies": "*"
-},{
 	"network_id": "56",
 	"domain": "meetic-partners.com",
 	"block_cookies": "*"
@@ -2219,10 +2155,6 @@
 	"domain": "monoloop.com",
 	"block_cookies": "*"
 },{
-	"network_id": "233",
-	"domain": "monster.com",
-	"block_cookies": "*"
-},{
 	"network_id": "257",
 	"domain": "mookie1.com",
 	"block_cookies": "*"
@@ -2237,10 +2169,6 @@
 },{
 	"network_id": "44",
 	"domain": "msads.net",
-	"block_cookies": "*"
-},{
-	"network_id": "44",
-	"domain": "msn.com",
 	"block_cookies": "*"
 },{
 	"network_id": "504",
@@ -2367,10 +2295,6 @@
 	"domain": "nspmotion.com",
 	"block_cookies": "*"
 },{
-	"network_id": "580",
-	"domain": "nucaptcha.com",
-	"block_cookies": "*"
-},{
 	"network_id": "49",
 	"domain": "nuggad.net",
 	"block_cookies": "*"
@@ -2409,14 +2333,6 @@
 },{
 	"network_id": "339",
 	"domain": "oneiota.co.uk",
-	"block_cookies": "*"
-},{
-	"network_id": "445",
-	"domain": "ooyala.com",
-	"block_cookies": "*"
-},{
-	"network_id": "579",
-	"domain": "openfeint.com",
 	"block_cookies": "*"
 },{
 	"network_id": "51",
@@ -2469,10 +2385,6 @@
 },{
 	"network_id": "506",
 	"domain": "out-there-media.com",
-	"block_cookies": "*"
-},{
-	"network_id": "169",
-	"domain": "outbrain.com",
 	"block_cookies": "*"
 },{
 	"network_id": "559",
@@ -3071,22 +2983,6 @@
 	"domain": "tellapart.com",
 	"block_cookies": "*"
 },{
-	"network_id": "375",
-	"domain": "telstra.com",
-	"block_cookies": "*"
-},{
-	"network_id": "563",
-	"domain": "telstra.com.au",
-	"block_cookies": "*"
-},{
-	"network_id": "563",
-	"domain": "telstrabusiness.com",
-	"block_cookies": "*"
-},{
-	"network_id": "563",
-	"domain": "telstraenterprise.com",
-	"block_cookies": "*"
-},{
 	"network_id": "175",
 	"domain": "teracent.com",
 	"block_cookies": "*"
@@ -3271,10 +3167,6 @@
 	"domain": "up-value.de",
 	"block_cookies": "*"
 },{
-	"network_id": "660",
-	"domain": "urbanairship.com",
-	"block_cookies": "*"
-},{
 	"network_id": "211",
 	"domain": "valueclick.com",
 	"block_cookies": "*"
@@ -3309,10 +3201,6 @@
 },{
 	"network_id": "136",
 	"domain": "vibrantmedia.com",
-	"block_cookies": "*"
-},{
-	"network_id": "93",
-	"domain": "videoegg.com",
 	"block_cookies": "*"
 },{
 	"network_id": "229",
@@ -3363,10 +3251,6 @@
 	"domain": "w55c.net",
 	"block_cookies": "*"
 },{
-	"network_id": "270",
-	"domain": "wallst.com",
-	"block_cookies": "*"
-},{
 	"network_id": "366",
 	"domain": "wanmo.com",
 	"block_cookies": "*"
@@ -3397,26 +3281,6 @@
 },{
 	"network_id": "421",
 	"domain": "webtrekk.net",
-	"block_cookies": "*"
-},{
-	"network_id": "362",
-	"domain": "wibiya.com",
-	"block_cookies": "*"
-},{
-	"network_id": "362",
-	"domain": "wibiya.conduit.com",
-	"block_cookies": "*"
-},{
-	"network_id": "666",
-	"domain": "widdit.com",
-	"block_cookies": "*"
-},{
-	"network_id": "177",
-	"domain": "widgetbox.com",
-	"block_cookies": "*"
-},{
-	"network_id": "177",
-	"domain": "widgetserver.com",
 	"block_cookies": "*"
 },{
 	"network_id": "44",
@@ -3487,10 +3351,6 @@
 	"domain": "yabuka.com",
 	"block_cookies": "*"
 },{
-	"network_id": "67",
-	"domain": "yahoo.com",
-	"block_cookies": "*"
-},{
 	"network_id": "65",
 	"domain": "yceml.net",
 	"block_cookies": "*"
@@ -3531,10 +3391,6 @@
 	"domain": "yieldoptimizer.com",
 	"block_cookies": "*"
 },{
-	"network_id": "67",
-	"domain": "yimg.com",
-	"block_cookies": "*"
-},{
 	"network_id": "78",
 	"domain": "yldmgrimg.net",
 	"block_cookies": "*"
@@ -3553,10 +3409,6 @@
 },{
 	"network_id": "153",
 	"domain": "yt1187.net",
-	"block_cookies": "*"
-},{
-	"network_id": "37",
-	"domain": "ytimg.com",
 	"block_cookies": "*"
 },{
 	"network_id": "175",
