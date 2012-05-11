@@ -224,13 +224,18 @@
       averageTime = (closedTime - openedTime) / 1000;
 
       // Popup closed time
-      mixpanel.track('chrollusion popup opened', {'time': averageTime});
+      mixpanel.track('chrollusion popup opened', {'averageTime': averageTime});
     });
   });
 
   chrome.extension.onRequest.addListener(function(req) {
     if (req.track) {
       if (req.track.prop) {
+        if (!localStorage['chrollusion_first_action']) {
+          localStorage['chrollusion_first_action'] = '1';
+          req.track.prop.action = req.track.name;
+          mixpanel.track('chrollusion first action on modal', req.track.prop);
+        }
         mixpanel.track(req.track.name, req.track.prop);
       } else {
         mixpanel.track(req.track.name);

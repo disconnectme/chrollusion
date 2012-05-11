@@ -203,7 +203,7 @@ $(window).ready(function() {
           track: {
             name: 'chrollusion modal closed',
             prop: {
-              time: ((new Date() - popupOpenedAt) / 1000)
+              ttl: ((new Date() - popupOpenedAt) / 1000)
             }
           }
         });
@@ -217,14 +217,24 @@ $(window).ready(function() {
   $('#js-share-fb').click(function(e) {
     e.preventDefault();
     chrome.extension.sendRequest({
-      track: { name: 'chrollusion fb-share clicked' }
+      track: {
+        name: 'chrollusion fb-share clicked',
+        prop: {
+          ttl: ((new Date() - popupOpenedAt) / 1000)
+        }
+      }
     });
     $('a[name="fb_share"]').click();
   });
   $('#js-share-tweet').click(function(e) {
     e.preventDefault();
     chrome.extension.sendRequest({
-      track: { name: 'chrollusion tweet clicked' }
+      track: {
+        name: 'chrollusion tweet clicked',
+        prop: {
+          ttl: ((new Date() - popupOpenedAt) / 1000)
+        }
+      }
     });
     window.open("https://twitter.com/intent/tweet?original_referer=&source=tweetbutton&text=Collusion%20for%20Chrome&url=https%3A%2F%2Fdisconnect.me%2Ftools");
   });
