@@ -70,8 +70,9 @@
 <!-- End Social Sharing Stuff -->
 
 <div id="update">
-  <a href="#" id="js-share-fb">Facebook</a>
-  <a href="#" id="js-share-tweet">Tweet</a>
+  <a id="js-share-fb">Like</a>
+  <a id="js-share-tweet">Tweet</a>
+  <a id="close-update">Close</a>
 </div>
 
 <script src="../scripts/vendor/d3.layout.js"></script>
@@ -103,6 +104,7 @@ var deserialize = backgroundPage.deserialize;
 var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
 var trackingBlocked = deserialize(localStorage.trackingBlocked);
 var badgeShown = deserialize(localStorage.badgeShown);
+var updateClosed = deserialize(localStorage.updateClosed);
 var addon = CollusionAddon;
 var graph;
 
@@ -110,7 +112,7 @@ $(window).ready(function() {
   if (SAFARI) {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
-    $("#update").hide();
+    updateClosed = true;
   } else {
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
@@ -126,6 +128,7 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").html("Block known tracking sites");
   }
+  updateClosed && $("#update").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -193,6 +196,11 @@ $(window).ready(function() {
       $("#block-tracking").click(function() {
         localStorage.trackingBlocked = !trackingBlocked;
         window.location.reload();
+      });
+      $("#close-update").click(function() {
+        localStorage.updateClosed = true;
+        $("#update").hide();
+        setBadgeText({text: ''});
       });
     }
   });

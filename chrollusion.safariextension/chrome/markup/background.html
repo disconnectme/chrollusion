@@ -19,6 +19,7 @@
 
     Brian Kennish <byoogle@gmail.com>
     Jeremy Singer-Vine <jsvine@gmail.com>
+    William Estoque <william.estoque@gmail.com>
 -->
 <script src="../scripts/vendor/port.js"></script>
 <script src="../scripts/vendor/jquery.min.js"></script>
@@ -37,6 +38,7 @@
   var extension = chrome.extension;
   var browserAction = chrome.browserAction;
   var setIcon = browserAction.setIcon;
+  var setBadgeText = browserAction.setBadgeText;
   var tlds = deserialize(localStorage.tlds) || {};
   var blacklist = deserialize(localStorage.blacklist) || {};
   var tabs = {};
@@ -92,6 +94,7 @@
             fileExtension
   });
   browserAction.setBadgeBackgroundColor({color: [214, 39, 40, 255]});
+  !deserialize(localStorage.updateClosed) && setBadgeText({text: 'NEW!'});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
@@ -175,7 +178,7 @@
       domainNames[domainName] = ++domainNames[domainName] || 1;
           // A count, for future use.
       deserialize(localStorage.badgeShown) &&
-          browserAction.setBadgeText({
+          setBadgeText({
             text: Object.keys(domainNames).length + '', tabId: tabId
           });
 
