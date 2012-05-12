@@ -267,7 +267,7 @@ html.deployment-production #deployment-info {
 
 #close-update {
   position: absolute;
-  right: -10px;
+  left: -10px;
   bottom: -10px;
   background: url(../images/close.png);
   width: 54px;
