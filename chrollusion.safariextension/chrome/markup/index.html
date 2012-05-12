@@ -72,8 +72,8 @@
 <div id="update">
   <div class="share" id="js-share-fb"></div>
   <div class="share" id="js-share-tweet"></div>
+  <div id="close-update"></div>
 </div>
-<div id="close-update"></div>
 
 <script src="../scripts/vendor/d3.layout.js"></script>
 <script src="../scripts/vendor/d3.geom.js"></script>
@@ -129,10 +129,7 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").html("Block known tracking sites");
   }
-  updateClosed && $("#update").hide() && $("#close-update").hide();
-  $("#close-update").css({
-    left: $(document).width() - 60, top: $(document).height() - 60
-  });
+  updateClosed && $("#update").hide();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -211,7 +208,7 @@ $(window).ready(function() {
           }
         });
         localStorage.updateClosed = true;
-        $("#update").hide() && $("#close-update").hide();
+        $("#update").hide();
         setBadgeText({text: ''});
       });
     }
