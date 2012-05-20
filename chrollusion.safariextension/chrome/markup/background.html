@@ -84,7 +84,9 @@
   // TODO: This file is already loaded elsewhere.
   $.getJSON('../data/trackers.json', function(data) {
     var siteCount = data.length;
-    for (var i = 0; i < siteCount; i++) blacklist[data[i].domain] = true;
+    var blacklistUpdate = {};
+    for (var i = 0; i < siteCount; i++) blacklistUpdate[data[i].domain] = true;
+    blacklist = blacklistUpdate;
     localStorage.blacklist = JSON.stringify(blacklist);
   });
 
