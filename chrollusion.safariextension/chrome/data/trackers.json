@@ -3283,10 +3283,6 @@
 	"domain": "webtrekk.net",
 	"block_cookies": "*"
 },{
-	"network_id": "44",
-	"domain": "wlxrs.com",
-	"block_cookies": "*"
-},{
 	"network_id": "270",
 	"domain": "wsod.com",
 	"block_cookies": "*"
