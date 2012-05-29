@@ -69,7 +69,7 @@
 </div>
 <!-- End Social Sharing Stuff -->
 
-<div id="update">
+<div id="update" style="display: none">
   <div class="share" id="js-share-fb"></div>
   <div class="share" id="js-share-tweet"></div>
   <div id="close-update"></div>
@@ -129,7 +129,7 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").html("Block known tracking sites");
   }
-  updateClosed && $("#update").hide();
+  !updateClosed && $("#update").show();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
