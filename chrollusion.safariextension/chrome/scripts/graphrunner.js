@@ -15,6 +15,7 @@ var GraphRunner = (function(jQuery, d3) {
     var SVG_WIDTH = options.width;
     var SVG_HEIGHT = options.height;
     var hideFavicons = options.hideFavicons;
+    var favicon = new Favicon();
 
     // Create the SVG element and populate it with some basic definitions
     // LONGTERM TODO: Since this is static markup, move it to index.html?
@@ -62,17 +63,9 @@ var GraphRunner = (function(jQuery, d3) {
     /* Makes a would-be selector CSS safe. */
     function harden(selector) { return selector.replace('.', '-'); }
 
-    /* Renders a site's favicon, if any. */
-    function setFavicon(domain, className, attribute) {
-      // TODO: Try more URLs (the "www" subdomain, "domain.host").
-      var name = domain.name;
-      var url = 'http://' + name + '/favicon.ico';
-
-      $.get(url, function(data, status, xhr) {
-        var type = xhr.getResponseHeader('Content-Type');
-        type && type.indexOf('image/') + 1 && data &&
-            $('.' + className + '.' + harden(name)).attr(attribute, url);
-      });
+    /* Renders a site's favicon. */
+    function setFavicon(className, name, attribute, url) {
+      $('.' + className + '.' + harden(name)).attr(attribute, url);
     }
 
     function setDomainLink(target, d) {
@@ -106,7 +99,9 @@ var GraphRunner = (function(jQuery, d3) {
         img.attr(attribute, "../images/favicon.png")
            .addClass(faviconName + " " + harden(d.name));
         if (!trackingBlocked || !d.trackerInfo)
-          setFavicon(d, faviconName, attribute);
+          favicon.get(d.host, function(url) {
+            setFavicon(faviconName, d.name, attribute, url);
+          });
         setDomainLink(info.find("a.domain"), d);
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });
@@ -289,7 +284,9 @@ var GraphRunner = (function(jQuery, d3) {
           .attr("class", function(d) {
             var className = "node";
             if (!trackingBlocked || !d.trackerInfo)
-              setFavicon(d, className, "href");
+              favicon.get(d.host, function(url) {
+                setFavicon(className, d.name, "href", url);
+              });
             return className + " " + harden(d.name);
           })
           .attr("width", "16")
