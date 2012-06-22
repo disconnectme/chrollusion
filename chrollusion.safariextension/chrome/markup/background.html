@@ -43,12 +43,18 @@
   var blacklist = deserialize(localStorage.blacklist) || {};
   var tabs = {};
   var log = {};
+  var build = 15;
   var startTime = new Date();
   var scenes = [1, 2, 3, 4, 5];
   var currentScene = getScene();
   var frameCount = 7;
   var frameLength = 100;
   var fileExtension = '.png';
+
+  if (!localStorage.build || localStorage.build < build) {
+    localStorage.promoHidden = true;
+    localStorage.build = build;
+  }
 
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
@@ -96,7 +102,8 @@
             fileExtension
   });
   browserAction.setBadgeBackgroundColor({color: [214, 39, 40, 255]});
-  !deserialize(localStorage.updateClosed) && setBadgeText({text: 'NEW!'});
+  deserialize(localStorage.promoHidden) ||
+      !deserialize(localStorage.updateClosed) && setBadgeText({text: 'NEW!'});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
@@ -180,10 +187,11 @@
       domainNames[domainName] = ++domainNames[domainName] || 1;
           // A count, for future use.
       deserialize(localStorage.badgeHidden) ||
-          deserialize(localStorage.updateClosed) &&
-              setBadgeText({
-                text: Object.keys(domainNames).length + '', tabId: tabId
-              });
+          (deserialize(localStorage.promoHidden) ||
+              deserialize(localStorage.updateClosed)) &&
+                  setBadgeText({
+                    text: Object.keys(domainNames).length + '', tabId: tabId
+                  });
 
       // Cleanup.
       sendResponse({});
