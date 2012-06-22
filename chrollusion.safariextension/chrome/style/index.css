@@ -270,10 +270,10 @@ html.deployment-production #deployment-info {
 
 #close-update {
   display: inline-block;
-  vertical-align: sub;
+  vertical-align: text-top;
   background: url(../images/close.png);
-  width: 17px;
-  height: 17px;
+  width: 12px;
+  height: 12px;
   cursor: pointer;
 }
 
