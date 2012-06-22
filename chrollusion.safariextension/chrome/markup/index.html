@@ -101,8 +101,8 @@ var query = chrome.tabs.query;
 var setBadgeText = chrome.browserAction.setBadgeText;
 var deserialize = backgroundPage.deserialize;
 var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
-var trackingBlocked = deserialize(localStorage.trackingBlocked);
-var badgeShown = deserialize(localStorage.badgeShown);
+var trackingUnblocked = deserialize(localStorage.trackingUnblocked);
+var badgeHidden = deserialize(localStorage.badgeHidden);
 var updateClosed = deserialize(localStorage.updateClosed);
 var addon = CollusionAddon;
 var graph;
@@ -119,16 +119,16 @@ $(window).ready(function() {
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
   $("#domain-infos").hide();
-  if (badgeShown) {
-    $("#show-badge").html("Hide the tracking counter");
-  } else {
+  if (badgeHidden) {
     $("#show-badge").addClass("invisible").html("Show the tracking counter");
+  } else {
+    $("#show-badge").html("Hide the tracking counter");
   }
   $("#show-instructions").hide();
-  if (trackingBlocked) {
-    $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
-  } else {
+  if (trackingUnblocked) {
     $("#block-tracking").html("Block known tracking sites");
+  } else {
+    $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
   }
   !updateClosed && $("#update").show();
 
@@ -163,8 +163,16 @@ $(window).ready(function() {
         window.setTimeout(function() { window.location.reload(); }, 200);
       });
       $("#show-badge").click(function() {
-        localStorage.badgeShown = badgeShown = !badgeShown;
-        if (badgeShown) {
+        localStorage.badgeHidden = badgeHidden = !badgeHidden;
+        if (badgeHidden) {
+          $("#show-badge").addClass("invisible").html("Show the tracker counter");
+          query({}, function(tabs) {
+            var tabCount = tabs.length;
+            for (var i = 0; i < tabCount; i++) {
+              setBadgeText({text: '', tabId: tabs[i].id});
+            }
+          });
+        } else {
           $("#show-badge").removeClass("invisible").html("Hide the tracker counter");
           query({}, function(tabs) {
             var tabCount = tabs.length;
@@ -174,14 +182,6 @@ $(window).ready(function() {
                 text: (Object.keys(backgroundPage.tabs[tabId] || {}).length || '') + '',
                 tabId: tabId
               });
-            }
-          });
-        } else {
-          $("#show-badge").addClass("invisible").html("Show the tracker counter");
-          query({}, function(tabs) {
-            var tabCount = tabs.length;
-            for (var i = 0; i < tabCount; i++) {
-              setBadgeText({text: '', tabId: tabs[i].id});
             }
           });
         }
@@ -196,7 +196,7 @@ $(window).ready(function() {
         window.setTimeout(function() { window.location.reload(); }, 100);
       });
       $("#block-tracking").click(function() {
-        localStorage.trackingBlocked = !trackingBlocked;
+        localStorage.trackingUnblocked = !trackingUnblocked;
         window.location.reload();
       });
       $("#close-update").click(function() {

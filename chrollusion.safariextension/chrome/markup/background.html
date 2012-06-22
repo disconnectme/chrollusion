@@ -111,7 +111,7 @@
         sendResponse({
           tlds: tlds,
           referrerUrl: tab.url,
-          trackingBlocked: deserialize(localStorage.trackingBlocked),
+          trackingBlocked: !deserialize(localStorage.trackingUnblocked),
           blacklist: blacklist
         });
     else {
@@ -179,10 +179,11 @@
       var domainNames = tabs[tabId];
       domainNames[domainName] = ++domainNames[domainName] || 1;
           // A count, for future use.
-      deserialize(localStorage.badgeShown) &&
-          setBadgeText({
-            text: Object.keys(domainNames).length + '', tabId: tabId
-          });
+      deserialize(localStorage.badgeHidden) ||
+          deserialize(localStorage.updateClosed) &&
+              setBadgeText({
+                text: Object.keys(domainNames).length + '', tabId: tabId
+              });
 
       // Cleanup.
       sendResponse({});

@@ -98,7 +98,7 @@ var GraphRunner = (function(jQuery, d3) {
         var faviconName = "favicon";
         img.attr(attribute, "../images/favicon.png")
            .addClass(faviconName + " " + harden(d.name));
-        if (!trackingBlocked || !d.trackerInfo)
+        if (trackingUnblocked || !d.trackerInfo)
           favicon.get(d.host, function(url) {
             setFavicon(faviconName, d.name, attribute, url);
           });
@@ -283,7 +283,7 @@ var GraphRunner = (function(jQuery, d3) {
         gs.append("svg:image")
           .attr("class", function(d) {
             var className = "node";
-            if (!trackingBlocked || !d.trackerInfo)
+            if (trackingUnblocked || !d.trackerInfo)
               favicon.get(d.host, function(url) {
                 setFavicon(className, d.name, "href", url);
               });
@@ -297,7 +297,7 @@ var GraphRunner = (function(jQuery, d3) {
       }
 
       // Ghostbustersification.
-      if (trackingBlocked) {
+      if (!trackingUnblocked) {
         gs.append("svg:line")
           .attr("x1", "-8")
           .attr("y1", "-8")
