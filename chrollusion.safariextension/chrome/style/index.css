@@ -59,6 +59,7 @@ html, body {
 }
 
 a {
+  outline: none;
   font-size: 9pt;
   color: black;
 }
@@ -242,13 +243,15 @@ html.deployment-production #deployment-info {
 }
 
 #update {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background: url(../images/update.png);
-  width: 760px;
-  height: 560px;
-  text-align: center;
+  border: 1px solid #fc0;
+  border-radius: 5px;
+  background: -webkit-linear-gradient(white, #fe8);
+  padding: 10px 5px;
+  width: 788px;
+}
+
+.chrome, .safari {
+  display: none;
 }
 
 .share {
@@ -266,13 +269,16 @@ html.deployment-production #deployment-info {
 }
 
 #close-update {
-  position: absolute;
-  left: -10px;
-  bottom: -10px;
+  display: inline-block;
+  vertical-align: sub;
   background: url(../images/close.png);
-  width: 54px;
-  height: 54px;
+  width: 17px;
+  height: 17px;
   cursor: pointer;
+}
+
+#close-update:hover {
+  background: url(../images/close-hover.png);
 }
 
 #social_share {
