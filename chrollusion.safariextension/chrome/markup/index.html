@@ -1,4 +1,4 @@
-<!DOCTYPE hmtl>
+<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=640">
 <title>Collusion for Chrome</title>
@@ -111,9 +111,9 @@ var popupOpenedAt = new Date();
 $(window).ready(function() {
   if (SAFARI) {
     $(".safari").show();
+    $("#update").addClass("safari");
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
-    updateClosed = true;
   } else {
     $(".chrome").show();
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
@@ -136,7 +136,7 @@ $(window).ready(function() {
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
     var runner = GraphRunner.Runner({
       width: sidebarCollapsed ? 800 : 576,
-      height: 600,
+      height: updateClosed ? 594 : 560,
       trackers: trackers,
       hideFavicons: false 
     });

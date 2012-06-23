@@ -55,7 +55,7 @@ html, body {
   padding: 0;
   background-color: white;
   color: #666666;
-  height: 600px;
+  height: 594px;
 }
 
 a {
@@ -248,6 +248,11 @@ html.deployment-production #deployment-info {
   background: -webkit-linear-gradient(white, #fe8);
   padding: 10px 5px;
   width: 788px;
+}
+
+#update.safari {
+  margin-left: 5px;
+  width: 778px;
 }
 
 .chrome, .safari {
