@@ -4,9 +4,10 @@
 A browser extension that lets you visualize and, optionally, block the invisible
 websites tracking you.
 
+--- June 25, 2012 --------------------------------------------------------------
+
                                   v1.6 (Chrome)
                                   v1.2 (Safari)
-                                  June 25, 2012
 
 * Adds a changelog.
 * Features dismissible update notifications.
