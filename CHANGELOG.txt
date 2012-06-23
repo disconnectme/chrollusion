@@ -1,0 +1,19 @@
+                               Collusion changelog
+                             (For Chrome and Safari)
+
+A browser extension that lets you visualize and, optionally, block the invisible
+websites tracking you.
+
+                                  v1.6 (Chrome)
+                                  v1.2 (Safari)
+                                  June 25, 2012
+
+* Adds a changelog.
+* Features dismissible update notifications.
+* Blocks known tracking sites by default (click the top button to unblock).
+* Shows real-time tracking counts by default (click the sidebar button to hide).
+* Supports remote edits to the list of tracking sites.
+* Plays nicely with Hotmail.
+* Opens the dropdown faster.
+* Activates scrollbars when the sidebar expands.
+* Finds more favicons to include in the graph.
