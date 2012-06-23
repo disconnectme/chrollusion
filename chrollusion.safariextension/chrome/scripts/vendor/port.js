@@ -1,7 +1,7 @@
 // Chrome to Safari port
 // Author: Michael Gundlach (gundlach@gmail.com)
-//         "tabs", "browserAction", and additional "extension" API support by
-//         Brian Kennish <byoogle@gmail.com>
+//         "cookies", "tabs", "browserAction", and additional "extension" API
+//         support by Brian Kennish <byoogle@gmail.com>
 // License: GPLv3 as part of adblockforchrome.googlecode.com
 //          or MIT if GPLv3 conflicts with your code's license.
 //
@@ -28,6 +28,7 @@ LEGACY_SAFARI = SAFARI && (navigator.appVersion.match(/\sSafari\/(\d+)\./) || [n
 if (SAFARI) {
 
   var isOnGlobalPage = !!safari.extension.bars;
+  var popup;
 
   // Return the object on which you can add/remove event listeners.
   // If there isn't one, don't explode.
@@ -259,7 +260,41 @@ if (SAFARI) {
       }
     },
 
+    cookies: {
+      getAll: function() {
+        // No-op.
+      },
+
+      getAllCookieStores: function() {
+        // No-op.
+      },
+
+      onChanged: {
+        addListener: function() {
+          // No-op.
+        }
+      },
+
+      remove: function() {
+        // No-op.
+      },
+
+      set: function() {
+        // No-op.
+      }
+    },
+
     tabs: {
+      create: function(createProperties, callback) {
+        var tab = safari.application.activeBrowserWindow.openTab(
+          createProperties.visibility || 'foreground',
+          createProperties.index ||
+              safari.application.activeBrowserWindow.tabs.length
+        );
+        tab.url = createProperties.url;
+        callback && callback(tab);
+      },
+
       onUpdated: {
         addListener: function(listener) {
           safari.application.addEventListener(
@@ -285,45 +320,79 @@ if (SAFARI) {
               });
             }, true
           );
+        }
+      },
 
-          safari.application.addEventListener('navigate', function(event) {
-            listener(event.target.id, {
-              status: 'complete',
-              url: event.target.url,
-              pinned: null
-            }, {
-              id: event.target.id,
-              index: null, // TODO: Traverse the "event.target.tabs" array.
-              windowId: null,
-              openerTabId: null,
-              highlighted: null,
-              active:
-                  event.target.id == event.target.browserWindow.activeTab.id,
-              pinned: null,
-              url: event.target.url,
-              title: event.target.title,
-              favIconUrl: null,
-              status: 'complete',
-              incognito: null
-            });
-          }, true);
+      query: function(queryInfo, callback) {
+        if (queryInfo.active) {
+          var tab = safari.application.activeBrowserWindow.activeTab;
+          tab.id = getTabId(tab);
+          callback([tab]);
+        } else {
+          // No-op.
         }
       }
     },
 
+    // Compatible with one toolbar button.
     browserAction: {
+      getPopup: function(details, callback) {
+        callback(
+          safari.extension.toolbarItems[0].popover.contentWindow.location.href
+        );
+      },
+
+      onClicked: {
+        addListener: function(listener) {
+          safari.application.addEventListener('popover', listener, true);
+        }
+      },
+
       setBadgeBackgroundColor: function() {
         // No-op.
       },
 
-      setBadgeText: function() {
-        // No-op.
+      setBadgeText: function(details) {
+        var tabId = details.tabId;
+        if (
+          !tabId ||
+              tabId ==
+                  getTabId(safari.application.activeBrowserWindow.activeTab)
+        ) safari.extension.toolbarItems[0].badge = details.text;
+
+        details.handled ||
+            safari.application.addEventListener('activate', function() {
+              details.handled = true;
+              chrome.browserAction.setBadgeText(details);
+            }, true);
       },
 
-      // Compatible with one toolbar button.
       setIcon: function(details) {
         safari.extension.toolbarItems[0].image =
             chrome.extension.getURL(details.path);
+      },
+
+      setPopup: function(details) {
+        var buttonCount = safari.extension.toolbarItems.length;
+        popup ||
+            (popup =
+                safari.extension.createPopover(
+                  'popup',
+                  chrome.extension.getURL(details.popup),
+                  details.width || 400,
+                  details.height || 300
+                )
+            );
+
+        for (var i = 0; i < buttonCount; i++) {
+          var button = safari.extension.toolbarItems[i];
+          button.popover = popup;
+          button.command = null;
+        }
+
+        safari.application.addEventListener('open', function() {
+          chrome.browserAction.setPopup(details);
+        }, true);
       }
     },
 

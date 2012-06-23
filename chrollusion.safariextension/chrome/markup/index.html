@@ -118,6 +118,10 @@ $(window).ready(function() {
     $(".chrome").show();
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
+  $("a").click(function() {
+    chrome.tabs.create({url: $(this).attr("href")});
+    return false;
+  });
   $("#domain-infos").hide();
   if (badgeHidden) {
     $("#show-badge").addClass("invisible").html("Show the tracking counter");
