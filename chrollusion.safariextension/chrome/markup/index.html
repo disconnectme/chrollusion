@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE hmtl>
 <meta charset="utf-8">
 <meta name="viewport" content="width=640">
 <title>Collusion for Chrome</title>
@@ -110,10 +110,10 @@ var popupOpenedAt = new Date();
 
 $(window).ready(function() {
   if (SAFARI) {
-    $("#update").addClass("safari");
     $(".safari").show();
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
+    updateClosed = true;
   } else {
     $(".chrome").show();
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
@@ -130,8 +130,7 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
   }
-  !updateClosed && $("html").add("body").addClass("update") &&
-      $("#update").show();
+  !updateClosed && $("#update").show();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -211,7 +210,6 @@ $(window).ready(function() {
         });
         localStorage.updateClosed = true;
         $("#update").hide();
-        $("html").add("body").removeClass("update");
         setBadgeText({text: ''});
       });
     }
