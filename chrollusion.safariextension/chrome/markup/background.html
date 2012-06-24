@@ -102,7 +102,7 @@
             fileExtension
   });
   browserAction.setBadgeBackgroundColor({color: [214, 39, 40, 255]});
-  deserialize(localStorage.promoHidden) ||
+  SAFARI || deserialize(localStorage.promoHidden) ||
       !deserialize(localStorage.updateClosed) && setBadgeText({text: 'NEW!'});
 
   /* Restricts the toolbar animation to 1x per load of the topmost window. */
@@ -186,7 +186,7 @@
       var domainNames = tabs[tabId];
       domainNames[domainName] = ++domainNames[domainName] || 1;
           // A count, for future use.
-      deserialize(localStorage.badgeHidden) ||
+      SAFARI || deserialize(localStorage.badgeHidden) ||
           (deserialize(localStorage.promoHidden) ||
               deserialize(localStorage.updateClosed)) &&
                   setBadgeText({

@@ -140,7 +140,7 @@ $(window).ready(function() {
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
     var runner = GraphRunner.Runner({
       width: sidebarCollapsed ? 800 : 576,
-      height: updateClosed ? 594 : 560,
+      height: updateClosed ? 594 : 556,
       trackers: trackers,
       hideFavicons: false 
     });
@@ -212,9 +212,9 @@ $(window).ready(function() {
             }
           }
         });
+        deserialize(localStorage.promoHidden) || setBadgeText({text: ''});
         localStorage.updateClosed = true;
-        $("#update").hide();
-        setBadgeText({text: ''});
+        window.location.reload();
       });
     }
   });
