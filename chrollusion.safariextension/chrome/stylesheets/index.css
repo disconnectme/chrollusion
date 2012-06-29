@@ -51,11 +51,14 @@ line.bold {
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 9pt;
-  margin: 0;
   padding: 0;
   background-color: white;
   color: #666666;
-  height: 594px;
+  height: 588px;
+}
+
+body {
+  margin: 3px;
 }
 
 a {
@@ -66,21 +69,21 @@ a {
 
 #page {
   position: relative;
-  width: 800px;
+  width: 794px;
 }
 
 #sidebar {
   position: absolute;
-  top: 0px;
+  top: 10px;
   left: 0px;
   width: 200px;
-  padding-left: 20px;
+  padding-left: 15px;
   pointer-events: none;
 }
 
 #chart {
   position: absolute;
-  left: 224px;
+  left: 219px;
 }
 
 #chart.fullscreen {
@@ -208,7 +211,7 @@ div.settings-menu.collapsed {
 
 #show-ui {
   display: none;
-  left: 20px;
+  left: 15px;
   width: 10px;
 }
 
@@ -217,7 +220,7 @@ div.settings-menu.collapsed {
 }
 
 #block-tracking, #block-tracking.blocked:hover {
-  right: 20px;
+  right: 15px;
   border-color: #d62728;
   background: white;
   color: #d62728;
@@ -247,8 +250,8 @@ html.deployment-production #deployment-info {
   border: 1px solid #fc0;
   border-radius: 5px;
   background: -webkit-linear-gradient(white, #fe8);
-  padding: 10px 5px;
-  width: 788px;
+  padding: 10px;
+  width: 772px;
 }
 
 #update.safari {
