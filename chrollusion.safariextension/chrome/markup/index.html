@@ -109,12 +109,12 @@ var popupOpenedAt = new Date();
 
 $(window).ready(function() {
   if (SAFARI) {
-    $(".safari").show();
-    $("#update").addClass("safari");
+    $("body").add("#update").add("#chart").addClass("safari");
+    $("#update .safari").show();
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
   } else {
-    $(".chrome").show();
+    $("#update .chrome").show();
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
   $("a").click(function() {
@@ -138,8 +138,8 @@ $(window).ready(function() {
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
     var runner = GraphRunner.Runner({
-      width: sidebarCollapsed ? 794 : 575,
-      height: updateClosed ? 586 : 548,
+      width: sidebarCollapsed ? SAFARI ? 791 : 794 : SAFARI ? 576 : 575,
+      height: updateClosed ? SAFARI ? 597 : 586 : SAFARI ? 556 : 548,
       trackers: trackers,
       hideFavicons: false 
     });

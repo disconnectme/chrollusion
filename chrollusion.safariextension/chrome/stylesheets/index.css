@@ -61,6 +61,10 @@ body {
   margin: 3px;
 }
 
+body.safari {
+  margin: 0;
+}
+
 a {
   outline: none;
   font-size: 9pt;
@@ -88,6 +92,10 @@ a {
 
 #chart.fullscreen {
   left: 0;
+}
+
+#chart.safari.fullscreen {
+  left: 4px;
 }
 
 #sidebar a, .info a, span.next {
@@ -255,11 +263,11 @@ html.deployment-production #deployment-info {
 }
 
 #update.safari {
-  margin-left: 5px;
-  width: 778px;
+  margin-left: 4px;
+  width: 769px;
 }
 
-.chrome, .safari {
+#update .chrome, #update .safari {
   display: none;
 }
 
