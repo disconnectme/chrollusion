@@ -107,6 +107,10 @@ blockquote {
   font-style: italic;
 }
 
+h1 {
+  margin: 0;
+}
+
 h2.domain img.favicon {
   width: 16px;
   height: 16px;
