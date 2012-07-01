@@ -4,7 +4,15 @@
 A browser extension that lets you visualize and, optionally, block the invisible
 websites tracking you.
 
---- June 25, 2012 --------------------------------------------------------------
+--- June 30, 2012 --------------------------------------------------------------
+
+                                  v1.7 (Chrome)
+                                  v1.3 (Safari)
+
+* Adjusts the dropdown margins for Chrome 20.
+* Tweaks other Chrome and Safari spacing.
+
+-------------------------------------------------------------- June 25, 2012 ---
 
                                   v1.6 (Chrome)
                                   v1.2 (Safari)
