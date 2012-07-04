@@ -46,6 +46,8 @@ These libraries are bundled with the project and needn’t be updated manually:
 * [jQuery](https://github.com/jquery/jquery)
 * [D3.js](https://github.com/mbostock/d3)
 * [port.js](https://github.com/disconnectme/port)
+* [sitename.js](https://github.com/disconnectme/sitename)
+* [favicon.js](https://github.com/disconnectme/favicon)
 
 ## License
 
