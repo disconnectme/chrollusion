@@ -20,7 +20,7 @@ Collusion](https://github.com/toolness/collusion).
 ### In Chrome
 
 3. Go to the wrench menu > **Tools** > **Extensions**.
-4. Press **Load unpacked extension...** .
+4. Check **Developer mode** then press **Load unpacked extension...** .
 5. Find your working directory.
 6. Under `chrollusion.safariextension`, select `chrome`.
 7. To test after you make a change, be sure to expand the extension listing then
@@ -30,7 +30,14 @@ Collusion](https://github.com/toolness/collusion).
 
 ### In Safari
 
-TODO.
+3. Go to **Develop** > **Show Extension Builder**.
+4. Click **+** then select **Add Extension...** .
+5. Find your working directory.
+6. Select `chrollusion.safariextension`.
+7. Click **Install** then **Allow**.
+8. To test after you make a change, be sure to click **Reload** then **Allow**.
+9. Push your changes.
+10. Send us pull requests.
 
 ## Software used
 

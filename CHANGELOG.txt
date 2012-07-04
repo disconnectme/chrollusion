@@ -11,6 +11,7 @@ websites tracking you.
 
 * Adjusts the dropdown margins for Chrome 20.
 * Tweaks other Chrome and Safari spacing.
+* Adds instructions for Safari developers.
 
 --- June 25, 2012 --------------------------------------------------------------
 
