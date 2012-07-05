@@ -1,8 +1,8 @@
                                Collusion changelog
                              (For Chrome and Safari)
 
-A browser extension that lets you visualize and, optionally, block the invisible
-websites tracking you.
+Collusion for Chrome and Collusion for Safari let you visualize and, optionally,
+block the invisible websites that track you.
 
 --- June 30, 2012 --------------------------------------------------------------
 
