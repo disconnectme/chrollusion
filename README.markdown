@@ -1,7 +1,7 @@
 # Collusion for Chrome (and Safari!)
 
-Collusion for Chrome is a browser extension that lets you visualize the
-invisible websites tracking you.
+Collusion for Chrome is a browser extension that lets you visualize and,
+optionally, block the invisible websites tracking you.
 
 You might fancy [watching a demo](https://www.youtube.com/watch?v=zP79Iwm0xbA)
 or [trying the extension](https://disconnect.me/collusion).
