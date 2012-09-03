@@ -112,6 +112,8 @@
 
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
+
+    if(request.dontRefresh) return;  // If request asked that data not be refreshed
     var tab = sender.tab;
 
     if (request.initialized)
@@ -213,7 +215,7 @@
   )(document,[]);
   mixpanel.init("0333093fe52f416ab912e13cc792fbf9");
 
-  // Handles all analytics
+  // Sends data on how long the display in seconds is open back home
   chrome.extension.onConnect.addListener(function(port) {
     // Popup opened for the first time
     if (!localStorage['chrollusion_first_time']) {
@@ -239,7 +241,9 @@
     });
   });
 
+  //  Sends event data from content script sources back home
   chrome.extension.onRequest.addListener(function(req) {
+    console.log(req);
     if (req.track) {
       if (req.track.prop) {
         if (!localStorage['chrollusion_first_action']) {
@@ -255,3 +259,23 @@
   });
 </script>
 <!--End Mixpanel Stuff-->
+
+<script>
+/* The interface is English only for now. */
+if (deserialize(localStorage.updateClosed) && !deserialize(localStorage.recommendsExperiment)) {
+	chrome.cookies.getAll({url:'https://google.com', name:'PREF'}, function() {
+		if (arguments[0] && arguments[0][0] && arguments[0][0].value && /LD=en/.test(arguments[0][0].value)) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "https://disconnect.me/ctest/sample", true);
+			xhr.onreadystatechange = function() {
+			  if (xhr.readyState == 4) {
+					if (xhr.responseText != 'skip') {
+            localStorage.recommendsExperiment = true;
+					}
+			  }
+			}
+			xhr.send();
+		}
+	});
+}
+</script>
