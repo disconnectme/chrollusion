@@ -8,11 +8,15 @@
 <script src="../scripts/vendor/favicon.js"></script>
 <script src="../scripts/index-content-script.js"></script>
 <link href="../stylesheets/index.css" rel="stylesheet" type="text/css"/>
-<div id="update" style="display: none">
-  <div id="close-update"></div>
+<div class="notification" id="update" style="display: none">
+  <div class="close"></div>
   &nbsp;<strong><span class="chrome">v1.7</span><span class="safari">v1.3</span></strong> Collusion now blocks tracking sites <span class="chrome">and shows tracking counts</span> by default. See the options below. <a href="https://disconnect.me/collusion/changelog">See the changelog</a> for more updates.
   <div class="share" id="js-share-fb" style="display: none"></div>
   <div class="share" id="js-share-tweet" style="display: none"></div>
+</div>
+<div class="notification" id="recommends" style="display: none">
+  <div class="close"></div>
+  &nbsp;<strong>Disconnect recommends <a href="https://disconnect.me/recommends">[?]</a>:</strong> Improve your online security with <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect"><img class="dashlane" src="../images/dashlane.ico" alt="Dashlane"> Dashlane</a> &amp; stop saving sensitive data on websites. <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect">Dashlane</a> manages<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;your passwords &amp; payment info locally &amp; securely (AES-256 encrypted). We’re fans, the app is free, &amp; we make a buck if you install. <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect">Start now</a>.
 </div>
 <div id="page">
 <div id="sidebar" style="display: none;">
@@ -104,6 +108,9 @@ var sidebarCollapsed = parseInt(localStorage.sidebarCollapsed, 10);
 var trackingUnblocked = deserialize(localStorage.trackingUnblocked);
 var badgeHidden = deserialize(localStorage.badgeHidden);
 var updateClosed = deserialize(localStorage.updateClosed);
+var recommendsActivated =
+    deserialize(localStorage.recommendsExperiment) &&
+        !deserialize(localStorage.recommendsClosed);
 var addon = CollusionAddon;
 var graph;
 var popupOpenedAt = new Date();
@@ -134,13 +141,17 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
   }
-  !updateClosed && $("#update").show();
+  updateClosed ?
+      recommendsActivated && $("#recommends").show() : $("#update").show();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
     var runner = GraphRunner.Runner({
       width: sidebarCollapsed ? SAFARI ? 791 : 794 : SAFARI ? 576 : 575,
-      height: updateClosed ? SAFARI ? 597 : 586 : SAFARI ? 556 : 548,
+      height:
+          updateClosed ?
+              SAFARI ? 597 : recommendsActivated ? 536 : 586 :
+                  SAFARI ? 556 : 548,
       trackers: trackers,
       hideFavicons: false 
     });
@@ -203,7 +214,7 @@ $(window).ready(function() {
         localStorage.trackingUnblocked = !trackingUnblocked;
         window.location.reload();
       });
-      $("#close-update").click(function() {
+      $("#update .close").click(function() {
         chrome.extension.sendRequest({
           track: {
             name: 'chrollusion modal closed',
@@ -214,6 +225,10 @@ $(window).ready(function() {
         });
         deserialize(localStorage.promoHidden) || setBadgeText({text: ''});
         localStorage.updateClosed = true;
+        window.location.reload();
+      });
+      $("#recommends .close").click(function() {
+        localStorage.recommendsClosed = true;
         window.location.reload();
       });
     }

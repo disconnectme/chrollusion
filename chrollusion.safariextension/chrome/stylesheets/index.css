@@ -257,7 +257,7 @@ html.deployment-production #deployment-info {
   display: none;
 }
 
-#update {
+.notification {
   margin-bottom: 4px;
   border: 1px solid #fc0;
   border-radius: 5px;
@@ -289,7 +289,7 @@ html.deployment-production #deployment-info {
   background-position: 0 60px;
 }
 
-#close-update {
+.close {
   display: inline-block;
   vertical-align: text-top;
   background: url(../images/close.png);
@@ -298,8 +298,14 @@ html.deployment-production #deployment-info {
   cursor: pointer;
 }
 
-#close-update:hover {
+.close:hover {
   background: url(../images/close-hover.png);
+}
+
+.dashlane {
+  vertical-align: text-top;
+  width: 16px;
+  height: 16px;
 }
 
 #social_share {
