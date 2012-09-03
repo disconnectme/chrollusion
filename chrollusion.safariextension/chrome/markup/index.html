@@ -230,7 +230,7 @@ $(window).ready(function() {
       $("#recommends .close").click(function() {
         chrome.extension.sendRequest({
           track: {
-            name: 'chrollusion modal closed',
+            name: 'chrollusion modal recommend closed',
             prop: {
               ttl: ((new Date() - popupOpenedAt) / 1000)
             }
