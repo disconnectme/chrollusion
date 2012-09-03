@@ -262,19 +262,15 @@
 <script>
 /* The interface is English only for now. */
 if (deserialize(localStorage.updateClosed) && !deserialize(localStorage.recommendsExperiment)) {
-	chrome.cookies.getAll({url:'https://google.com', name:'PREF'}, function() {
-		if (arguments[0] && arguments[0][0] && arguments[0][0].value && /LD=en/.test(arguments[0][0].value)) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", "https://disconnect.me/ctest/sample", true);
-			xhr.onreadystatechange = function() {
-			  if (xhr.readyState == 4) {
-					if (xhr.responseText != 'skip') {
-            localStorage.recommendsExperiment = true;
-					}
-			  }
-			}
-			xhr.send();
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", "https://disconnect.me/ctest/sample", true);
+		xhr.onreadystatechange = function() {
+		  if (xhr.readyState == 4) {
+				if (xhr.responseText != 'skip') {
+          localStorage.recommendsExperiment = true;
+				}
+		  }
 		}
-	});
+		xhr.send();
 }
 </script>
