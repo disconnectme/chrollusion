@@ -228,6 +228,15 @@ $(window).ready(function() {
         window.location.reload();
       });
       $("#recommends .close").click(function() {
+        chrome.extension.sendRequest({
+          track: {
+            name: 'chrollusion modal closed',
+            prop: {
+              ttl: ((new Date() - popupOpenedAt) / 1000)
+            }
+          },
+          dontRefresh: true            
+        });        
         localStorage.recommendsClosed = true;
         window.location.reload();
       });

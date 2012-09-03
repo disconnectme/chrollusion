@@ -243,7 +243,6 @@
 
   //  Sends event data from content script sources back home
   chrome.extension.onRequest.addListener(function(req) {
-    console.log(req);
     if (req.track) {
       if (req.track.prop) {
         if (!localStorage['chrollusion_first_action']) {
