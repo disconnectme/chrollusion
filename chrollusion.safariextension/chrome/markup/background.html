@@ -237,9 +237,7 @@
       averageTime = (closedTime - openedTime) / 1000;
 
       // Popup closed time
-      if(deserialize(localStorage.updateClosed)) {
-        mixpanel.track('chrollusion popup opened', {'averageTime': averageTime});
-      }
+      mixpanel.track('chrollusion popup opened', {'averageTime': averageTime});
     });
   });
 
