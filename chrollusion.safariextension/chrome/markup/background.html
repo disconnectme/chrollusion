@@ -238,6 +238,11 @@
 
       // Popup closed time
       mixpanel.track('chrollusion popup opened', {'averageTime': averageTime});
+      deserialize(localStorage.recommendsExperiment) &&
+          !deserialize(localStorage.recommendsClosed) &&
+              mixpanel.track(
+                'chrollusion recommends viewed', {averageTime: averageTime}
+              );
     });
   });
 
