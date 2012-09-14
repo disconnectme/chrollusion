@@ -43,7 +43,7 @@
   var blacklist = deserialize(localStorage.blacklist) || {};
   var tabs = {};
   var log = {};
-  var build = 15;
+  var build = 20;
   var startTime = new Date();
   var scenes = [1, 2, 3, 4, 5];
   var currentScene = getScene();
@@ -51,11 +51,12 @@
   var frameLength = 100;
   var fileExtension = '.png';
 
-  if (!localStorage.build || localStorage.build < build) {
-    localStorage.promoHidden = true;
-    localStorage.build = build;
-  }
-
+  if (!localStorage.build || localStorage.build < 15)
+      localStorage.promoHidden = true;
+  if (!localStorage.build || localStorage.build < 18)
+      localStorage.updateClosed = true;
+  if (!localStorage.build || localStorage.build < build)
+      localStorage.build = build;
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
 
@@ -112,8 +113,6 @@
 
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
-
-    if(request.dontRefresh) return;  // If request asked that data not be refreshed
     var tab = sender.tab;
 
     if (request.initialized)
@@ -199,83 +198,4 @@
       sendResponse({});
     }
   });
-</script>
-
-<!--Mixpanel Stuff-->
-<script type="text/javascript">
-  (function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";
-  a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+
-  '//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];
-  b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;
-  "undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g=['disable','track','track_pageview',
-  'track_links','track_forms','register','register_once','unregister','identify',
-  'name_tag','set_config'];
-  for(e=0;e<g.length;e++)(function(a){b[a]=function(){b.push([a].concat(
-  Array.prototype.slice.call(arguments,0)))}})(g[e]);c._i.push([a,d,f])};window.mixpanel=c}
-  )(document,[]);
-  mixpanel.init("0333093fe52f416ab912e13cc792fbf9");
-
-  // Sends data on how long the display in seconds is open back home
-  chrome.extension.onConnect.addListener(function(port) {
-    // Popup opened for the first time
-    if (!localStorage['chrollusion_first_time']) {
-      localStorage['chrollusion_first_time'] = '1';
-      mixpanel.track('chrollusion opened for first time', {'on': new Date()});
-    }
-
-    // Popup opened time
-    var averageTime, openedTime, closedTime;
-
-    // Opened Time
-    openedTime = new Date();
-
-    port.onDisconnect.addListener(function(e) {
-      // Closed Time
-      closedTime = new Date();
-
-      // Popup average time opened in seconds
-      averageTime = (closedTime - openedTime) / 1000;
-
-      // Popup closed time
-      mixpanel.track('chrollusion popup opened', {'averageTime': averageTime});
-      deserialize(localStorage.recommendsExperiment) &&
-          !deserialize(localStorage.recommendsClosed) &&
-              mixpanel.track(
-                'chrollusion recommends viewed', {averageTime: averageTime}
-              );
-    });
-  });
-
-  //  Sends event data from content script sources back home
-  chrome.extension.onRequest.addListener(function(req) {
-    if (req.track) {
-      if (req.track.prop) {
-        if (!localStorage['chrollusion_first_action']) {
-          localStorage['chrollusion_first_action'] = '1';
-          req.track.prop.action = req.track.name;
-          mixpanel.track('chrollusion first action on modal', req.track.prop);
-        }
-        mixpanel.track(req.track.name, req.track.prop);
-      } else {
-        mixpanel.track(req.track.name);
-      }
-    }
-  });
-</script>
-<!--End Mixpanel Stuff-->
-
-<script>
-/* The interface is English only for now. */
-if (deserialize(localStorage.updateClosed) && !deserialize(localStorage.recommendsExperiment)) {
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "https://disconnect.me/ctest/sample", true);
-		xhr.onreadystatechange = function() {
-		  if (xhr.readyState == 4) {
-				if (xhr.responseText != 'skip') {
-          localStorage.recommendsExperiment = true;
-				}
-		  }
-		}
-		xhr.send();
-}
 </script>
