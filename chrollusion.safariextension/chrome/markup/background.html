@@ -43,7 +43,8 @@
   var blacklist = deserialize(localStorage.blacklist) || {};
   var tabs = {};
   var log = {};
-  var build = 20;
+  var currentBuild = 21;
+  var previousBuild = localStorage.build;
   var startTime = new Date();
   var scenes = [1, 2, 3, 4, 5];
   var currentScene = getScene();
@@ -51,12 +52,10 @@
   var frameLength = 100;
   var fileExtension = '.png';
 
-  if (!localStorage.build || localStorage.build < 15)
-      localStorage.promoHidden = true;
-  if (!localStorage.build || localStorage.build < 18)
-      localStorage.updateClosed = true;
-  if (!localStorage.build || localStorage.build < build)
-      localStorage.build = build;
+  if (!previousBuild || previousBuild < 15) localStorage.promoHidden = true;
+  if (!previousBuild || previousBuild < 18) localStorage.updateClosed = true;
+  if (!previousBuild || previousBuild < currentBuild)
+      localStorage.build = currentBuild;
   parseInt(localStorage.sidebarCollapsed, 10) &&
       localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
 
