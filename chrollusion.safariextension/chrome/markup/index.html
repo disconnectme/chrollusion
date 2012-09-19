@@ -109,10 +109,11 @@ var trackingUnblocked = deserialize(localStorage.trackingUnblocked);
 var badgeHidden = deserialize(localStorage.badgeHidden);
 var updateClosed = deserialize(localStorage.updateClosed);
 var recommendsActivated =
-    false && deserialize(localStorage.recommendsExperiment) &&
+    deserialize(localStorage.recommendsExperiment) &&
         !deserialize(localStorage.recommendsClosed);
 var addon = CollusionAddon;
 var graph;
+var popupOpenedAt = new Date();
 
 $(window).ready(function() {
   if (SAFARI) {
@@ -214,25 +215,57 @@ $(window).ready(function() {
         window.location.reload();
       });
       $("#update .close").click(function() {
+        chrome.extension.sendRequest({
+          track: {
+            name: 'chrollusion modal closed',
+              prop: {	
+                ttl: ((new Date() - popupOpenedAt) / 1000)
+              }	
+            }
+          });
+                  
         deserialize(localStorage.promoHidden) || setBadgeText({text: ''});
         localStorage.updateClosed = true;
         window.location.reload();
       });
       $("#recommends .close").click(function() {
+        chrome.extension.sendRequest({
+          track: {
+            name: 'chrollusion modal recommend closed',
+              prop: {	
+                ttl: ((new Date() - popupOpenedAt) / 1000)
+              }	
+            }
+          });
         localStorage.recommendsClosed = true;
         window.location.reload();
       });
-      $("#recommends a").click(function() {});
+      $("#recommends a").click(function() {
+        if(/dashlane/.test($(this).attr('href'))) {
+          // Dashlane link was clicked
+          chrome.extension.sendRequest({
+            track: {
+              name: 'chrollusion visit dashlane',
+              prop: {
+                ttl: ((new Date() - popupOpenedAt) / 1000)
+              }
+            },
+            dontRefresh: true            
+          });
+        } else if(/disconnect.me\/recommends/.test($(this).attr('href'))) {
+          //  Disconnect Link was clicked
+          chrome.extension.sendRequest({          
+            track: {
+              name: 'chrollusion visit disconnect recommends',
+              prop: {
+                ttl: ((new Date() - popupOpenedAt) / 1000)
+              }
+            },
+            dontRefresh: true
+          });
+        }
+      });
     }
-  });
-
-  $('#js-share-fb').click(function(e) {
-    e.preventDefault();
-    $('a[name="fb_share"]').click();
-  });
-  $('#js-share-tweet').click(function(e) {
-    e.preventDefault();
-    window.open("https://twitter.com/intent/tweet?original_referer=&source=tweetbutton&text=The%20new%20Collusion%20for%20Chrome%20by%20%40disconnectme%20shows%20the%20sites%20that%20secretly%20track%20you,%20and%20now,%20blocks%20850%20of%20them%3A&url=https%3A%2F%2Fblog.disconnect.me%2Fcollusion-for-safari");
   });
 });
 

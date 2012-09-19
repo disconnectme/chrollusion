@@ -19,10 +19,14 @@
 
     Brian Kennish <byoogle@gmail.com>
     Jeremy Singer-Vine <jsvine@gmail.com>
+    Gary Teh <garyjob@gmail.com>    
     William Estoque <william.estoque@gmail.com>
+    
 -->
 <script src="../scripts/vendor/port.js"></script>
 <script src="../scripts/vendor/jquery.min.js"></script>
+<script src="../scripts/vendor/jquery.min.js"></script>
+<script src="../scripts/analytics.js"></script>
 <script>
   /* Destringifies an object. */
   function deserialize(object) {
@@ -51,6 +55,7 @@
   var frameCount = 7;
   var frameLength = 100;
   var fileExtension = '.png';
+  var atr = new analytics();
 
   if (!previousBuild || previousBuild < 15) localStorage.promoHidden = true;
   if (!previousBuild || previousBuild < 18) localStorage.updateClosed = true;
@@ -113,7 +118,26 @@
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
     var tab = sender.tab;
-
+    
+    //  Sends event data from content script sources back home
+    if (request.track) {
+      //Do not track
+      if (!deserialize(localStorage.recommendsExperiment) || deserialize(localStorage.recommendsClosed)) {
+        return;
+      }
+      if (request.track.prop) {
+        if (!localStorage['chrollusion_first_action']) {
+          localStorage['chrollusion_first_action'] = '1';
+          request.track.prop.action = request.track.name;
+          atr.triggerEvent('chrollusion first action on modal', request.track.prop);
+        }
+        atr.triggerEvent(request.track.name, request.track.prop);
+      } else {
+        atr.triggerEvent(request.track.name);
+      }
+      return;
+    }
+    
     if (request.initialized)
         sendResponse({
           tlds: tlds,
@@ -197,4 +221,36 @@
       sendResponse({});
     }
   });
+  
+  // Sends data on how long the display in seconds is open back home  
+  chrome.extension.onConnect.addListener(function(port) {
+    //Do not track
+    if (!deserialize(localStorage.recommendsExperiment) || deserialize(localStorage.recommendsClosed)) {
+      return;
+    }
+    
+    // Popup opened for the first time	
+    if (!localStorage['chrollusion_first_time']) {
+      localStorage['chrollusion_first_time'] = '1';
+      atr.triggerEvent('chrollusion opened for first time', {'on': new Date()});
+    }
+    
+    // Popup opened time
+    var averageTime, openedTime, closedTime;
+    
+    // Opened Time
+    openedTime = new Date();
+    
+    port.onDisconnect.addListener(function(e) {
+      // Closed Time
+      closedTime = new Date();
+      // Popup average time opened in seconds
+      averageTime = (closedTime - openedTime) / 1000;
+      
+      // Popup closed time
+      atr.triggerEvent('chrollusion popup opened', {'averageTime': averageTime});
+      atr.triggerEvent('chrollusion recommends viewed', {averageTime: averageTime});
+    });
+  });
+  
 </script>
