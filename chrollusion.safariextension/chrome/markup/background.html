@@ -27,6 +27,7 @@
 <script src="../scripts/vendor/jquery.min.js"></script>
 <script src="../scripts/vendor/jquery.min.js"></script>
 <script src="../scripts/analytics.js"></script>
+<script src="../scripts/recommends.js"></script>
 <script>
   /* Destringifies an object. */
   function deserialize(object) {
@@ -56,6 +57,7 @@
   var frameLength = 100;
   var fileExtension = '.png';
   var atr = new analytics();
+  var recommender = new recommends();
 
   if (!previousBuild || previousBuild < 15) localStorage.promoHidden = true;
   if (!previousBuild || previousBuild < 18) localStorage.updateClosed = true;
@@ -117,6 +119,7 @@
 
   /* Refreshes the data and graph if open. */
   extension.onRequest.addListener(function(request, sender, sendResponse) {
+    console.log(request)
     var tab = sender.tab;
     
     //  Sends event data from content script sources back home
@@ -252,5 +255,4 @@
       atr.triggerEvent('chrollusion recommends viewed', {averageTime: averageTime});
     });
   });
-  
 </script>

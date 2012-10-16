@@ -16,7 +16,7 @@
 </div>
 <div class="notification" id="recommends" style="display: none">
   <div class="close"></div>
-  &nbsp;<strong>Disconnect recommends <a href="https://disconnect.me/recommends">[?]</a>:</strong> Improve your online security with <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect"><img class="dashlane" src="../images/dashlane.ico" alt="Dashlane"> Dashlane</a> &amp; stop saving sensitive data on websites. <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect">Dashlane</a> manages<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;your passwords &amp; payment info locally &amp; securely (AES-256 encrypted). We’re fans, the app is free, &amp; we make a buck if you install. <a href="https://www.dashlane.com/dashlanefordisconnect/?utm_medium=textlink&amp;utm_campaign=collusion&amp;utm_source=disconnect">Start now</a>.
+  <span id='recommender-message'></span>
 </div>
 <div id="page">
 <div id="sidebar" style="display: none;">
@@ -83,6 +83,7 @@
 <script src="../scripts/vendor/jquery.min.js"></script>
 <script src="../scripts/collusion-addon.js"></script>
 <script src="../scripts/graphrunner.js"></script>
+<script src="../scripts/recommends.js"></script>
 <script>
 function getJsonNoMatterWhat(url, callback) {
   /* jQuery.getJSON fails silently when trying to get a local json file. jQuery.ajax
@@ -114,6 +115,9 @@ var recommendsActivated =
 var addon = CollusionAddon;
 var graph;
 var popupOpenedAt = new Date();
+var recommender = new recommends(function(recommend){
+  $('#recommender-message').html(recommend.html);
+});
 
 $(window).ready(function() {
   if (SAFARI) {
@@ -232,20 +236,22 @@ $(window).ready(function() {
         chrome.extension.sendRequest({
           track: {
             name: 'chrollusion modal recommend closed',
-              prop: {	
-                ttl: ((new Date() - popupOpenedAt) / 1000)
-              }	
-            }
-          });
-        localStorage.recommendsClosed = true;
-        window.location.reload();
+            prop: {	
+              ttl: ((new Date() - popupOpenedAt) / 1000)
+            }	
+          }
+        });
+        setTimeout(function(){
+          window.location.reload();
+          localStorage.recommendsClosed = true;          
+        }, 100);
       });
       $("#recommends a").click(function() {
-        if(/dashlane/.test($(this).attr('href'))) {
+        if(/dashlane/.test($(this).attr('href')) || /brandyourself/.test($(this).attr('href'))) {
           // Dashlane link was clicked
           chrome.extension.sendRequest({
             track: {
-              name: 'chrollusion visit dashlane',
+              name: 'chrollusion visit',
               prop: {
                 ttl: ((new Date() - popupOpenedAt) / 1000)
               }
