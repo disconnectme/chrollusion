@@ -247,7 +247,7 @@ $(window).ready(function() {
         }, 100);
       });
       $("#recommends a").click(function() {
-        if(/dashlane/.test($(this).attr('href')) || /brandyourself/.test($(this).attr('href'))) {
+        if(/recommends/.test($(this).attr('class'))) {
           // Dashlane link was clicked
           chrome.extension.sendRequest({
             track: {
