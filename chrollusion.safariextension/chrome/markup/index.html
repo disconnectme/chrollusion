@@ -146,7 +146,8 @@ $(window).ready(function() {
     $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
   }
   updateClosed ?
-      recommendsActivated && $("#recommends").show() : $("#update").show();
+      recommendsActivated && recommender.hasCampaign()
+      && $("#recommends").show() : $("#update").show();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {

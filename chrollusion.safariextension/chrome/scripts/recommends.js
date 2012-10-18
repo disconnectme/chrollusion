@@ -42,7 +42,6 @@ recommends.prototype.defaultCampaign = {
   html: ''
 }
 
-
 recommends.prototype.setCurrentCampaign = function(initializedCallback) {
   var self = this;  
   if(!self.deserialize(localStorage.recommendsExperiment)) {
@@ -78,6 +77,15 @@ recommends.prototype.getCurrentCampaignKey = function() {
   }
 };
 
+recommends.prototype.hasCampaign = function() {
+  var self = this;
+  var allCampaigns = self.getAllCampaigns();  
+  if(allCampaigns && allCampaigns[deserialize(localStorage.recommendsExperiment)]) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 recommends.prototype.getCurrentCampaignHtml = function() {
   var self = this;
