@@ -26,7 +26,7 @@ var recommends = function(initializedCallback) {
     var xhrD = new XMLHttpRequest();
     xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
     xhrD.onreadystatechange = function() {
-      if (xhrD.readyState == 4) {
+      if (xhrD.readyState == 4 && xhrD.status == 200) {
         localStorage.recommendsCampaigns = xhrD.responseText;
       }
       self.setCurrentCampaign(initializedCallback);     
@@ -49,11 +49,9 @@ recommends.prototype.setCurrentCampaign = function(initializedCallback) {
     var xhrS = new XMLHttpRequest();
     xhrS.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignSample", true);
     xhrS.onreadystatechange = function() {
-      if (xhrS.readyState == 4) {
-        if(xhrS.responseText !='') {
+      if (xhrS.readyState == 4 && xhrS.status == 200) {
+        if(xhrS.responseText && xhrS.responseText !='') {
           localStorage.recommendsExperiment = JSON.stringify(xhrS.responseText);
-        } else {
-          
         }
         initializedCallback && initializedCallback({
           key : self.getCurrentCampaignKey(),
