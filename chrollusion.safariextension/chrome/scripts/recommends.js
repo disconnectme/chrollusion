@@ -22,19 +22,15 @@
 
 var recommends = function(initializedCallback) {
   var self = this;
-  if(!self.deserialize(localStorage.recommendsCampaigns)) {
-    var xhrD = new XMLHttpRequest();
-    xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
-    xhrD.onreadystatechange = function() {
-      if (xhrD.readyState == 4 && xhrD.status == 200) {
-        localStorage.recommendsCampaigns = xhrD.responseText;
-      }
-      self.setCurrentCampaign(initializedCallback);     
+  var xhrD = new XMLHttpRequest();
+  xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
+  xhrD.onreadystatechange = function() {
+    if (xhrD.readyState == 4 && xhrD.status == 200) {
+      localStorage.recommendsCampaigns = xhrD.responseText;
     }
-    xhrD.send();
-  } else {
-    self.setCurrentCampaign(initializedCallback);    
+    self.setCurrentCampaign(initializedCallback);     
   }
+  xhrD.send();
 };
 
 recommends.prototype.defaultCampaign = {
