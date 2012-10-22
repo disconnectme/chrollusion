@@ -117,6 +117,31 @@ var graph;
 var popupOpenedAt = new Date();
 var recommender = new recommends(function(recommend){
   $('#recommender-message').html(recommend.html);
+  $("#recommends a").click(function() {
+    if(/recommends/.test($(this).attr('class'))) {
+      // Dashlane link was clicked
+      chrome.extension.sendRequest({
+        track: {
+          name: 'chrollusion visit',
+          prop: {
+            ttl: ((new Date() - popupOpenedAt) / 1000)
+          }
+        },
+        dontRefresh: true            
+      });
+    } else if(/disconnect.me\/recommends/.test($(this).attr('href'))) {
+      //  Disconnect Link was clicked
+      chrome.extension.sendRequest({          
+        track: {
+          name: 'chrollusion visit disconnect recommends',
+          prop: {
+            ttl: ((new Date() - popupOpenedAt) / 1000)
+          }
+        },
+        dontRefresh: true
+      });
+    }
+  });
 });
 
 $(window).ready(function() {
@@ -246,31 +271,6 @@ $(window).ready(function() {
           window.location.reload();
           localStorage.recommendsClosed = true;          
         }, 100);
-      });
-      $("#recommends a").click(function() {
-        if(/recommends/.test($(this).attr('class'))) {
-          // Dashlane link was clicked
-          chrome.extension.sendRequest({
-            track: {
-              name: 'chrollusion visit',
-              prop: {
-                ttl: ((new Date() - popupOpenedAt) / 1000)
-              }
-            },
-            dontRefresh: true            
-          });
-        } else if(/disconnect.me\/recommends/.test($(this).attr('href'))) {
-          //  Disconnect Link was clicked
-          chrome.extension.sendRequest({          
-            track: {
-              name: 'chrollusion visit disconnect recommends',
-              prop: {
-                ttl: ((new Date() - popupOpenedAt) / 1000)
-              }
-            },
-            dontRefresh: true
-          });
-        }
       });
     }
   });
