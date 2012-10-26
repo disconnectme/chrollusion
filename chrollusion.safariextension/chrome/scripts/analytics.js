@@ -30,7 +30,7 @@ analytics.prototype.triggerEvent = function(event, attr) {
   var self = this;
   attr = attr || {};
   attr.recommendKey = recommender.getCurrentCampaignKey();
-  var url = 'http://artariteenageriot.disconnect.me:9080/' + event + '/' + self.sessionId;
+  var url = 'http://artariteenageriot.disconnect.me:9000/' + event + '/' + self.sessionId;
   var queryString = '';
   if (Object.keys(attr).length > 0) {
     for(key in attr) {

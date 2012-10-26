@@ -20,17 +20,26 @@
     Gary Teh <garyjob@gmail.com>
 */
 
-var recommends = function(initializedCallback) {
-  var self = this;
-  var xhrD = new XMLHttpRequest();
-  xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
-  xhrD.onreadystatechange = function() {
-    if (xhrD.readyState == 4 && xhrD.status == 200) {
-      localStorage.recommendsCampaigns = xhrD.responseText;
+var recommends = function(popupCallback) {
+  var self = this;  
+  if(!popupCallback) {
+    var self = this;
+    var xhrD = new XMLHttpRequest();
+    xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
+    xhrD.onreadystatechange = function() {
+      if (xhrD.readyState == 4 && xhrD.status == 200) {
+        localStorage.recommendsCampaigns = xhrD.responseText;
+        self.setCurrentCampaign();        
+      }
     }
-    self.setCurrentCampaign(initializedCallback);     
+    xhrD.send();    
+  } else {
+    popupCallback && popupCallback({
+      key : self.getCurrentCampaignKey(),
+      html : self.getCurrentCampaignHtml()
+    });    
   }
-  xhrD.send();
+
 };
 
 recommends.prototype.defaultCampaign = {
@@ -38,29 +47,29 @@ recommends.prototype.defaultCampaign = {
   html: ''
 }
 
-recommends.prototype.setCurrentCampaign = function(initializedCallback) {
-  var self = this;  
+recommends.prototype.setCurrentCampaign = function() {
+  var self = this;
   if(!self.deserialize(localStorage.recommendsExperiment)) {
     var xhrS = new XMLHttpRequest();
     xhrS.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignSample", true);
     xhrS.onreadystatechange = function() {
       if (xhrS.readyState == 4 && xhrS.status == 200) {
         if(xhrS.responseText && xhrS.responseText !='') {
-          localStorage.recommendsExperiment = JSON.stringify(xhrS.responseText);
+          var allCampaigns = self.getAllCampaigns();
+          if(allCampaigns && allCampaigns[xhrS.responseText]) {
+            localStorage.recommendsExperiment = JSON.stringify(xhrS.responseText);
+            atr && atr.triggerEvent('chrollusion campaign started', {});            
+          }          
         }
-        initializedCallback && initializedCallback({
-          key : self.getCurrentCampaignKey(),
-          html : self.getCurrentCampaignHtml()
-        });
       }
     }
     xhrS.send();    
   } else {
-    initializedCallback && initializedCallback({
-      key : self.getCurrentCampaignKey(),
-      html : self.getCurrentCampaignHtml()
-    });
-  }  
+    var allCampaigns = self.getAllCampaigns();
+    if(allCampaigns && !allCampaigns[self.deserialize(localStorage.recommendsExperiment)]) {
+      delete localStorage.recommendsExperiment;
+    }    
+  }
 };
 
 recommends.prototype.getCurrentCampaignKey = function() {
