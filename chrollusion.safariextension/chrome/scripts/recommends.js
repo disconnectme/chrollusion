@@ -20,9 +20,12 @@
     Gary Teh <garyjob@gmail.com>
 */
 
+// all loads campaign data 
 var recommends = function(popupCallback) {
-  var self = this;  
-  if(!popupCallback) {
+  var self = this;
+  
+  // call from background page
+  if(!popupCallback) { 
     var self = this;
     var xhrD = new XMLHttpRequest();
     xhrD.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignData", true);
@@ -32,8 +35,10 @@ var recommends = function(popupCallback) {
         self.setCurrentCampaign();        
       }
     }
-    xhrD.send();    
-  } else {
+    xhrD.send();
+    
+  // call from popup index page
+  } else { 
     popupCallback && popupCallback({
       key : self.getCurrentCampaignKey(),
       html : self.getCurrentCampaignHtml()
@@ -49,6 +54,8 @@ recommends.prototype.defaultCampaign = {
 
 recommends.prototype.setCurrentCampaign = function() {
   var self = this;
+  
+  // When there is no experiment set for current user
   if(!self.deserialize(localStorage.recommendsExperiment)) {
     var xhrS = new XMLHttpRequest();
     xhrS.open("GET", "http://artariteenageriot.disconnect.me:9000/campaignSample", true);
@@ -64,31 +71,74 @@ recommends.prototype.setCurrentCampaign = function() {
       }
     }
     xhrS.send();    
+    
+  // When there is already experiment set for current user
   } else {
     var allCampaigns = self.getAllCampaigns();
+    
+    // delete experiment when the corresponding data in the campaign dataset no longer exist
     if(allCampaigns && !allCampaigns[self.deserialize(localStorage.recommendsExperiment)]) {
+      self.addCurrentExperimentToHistoryList();
       delete localStorage.recommendsExperiment;
     }    
   }
 };
 
+// Adds the current campaign to the historic list of passerbys
+recommends.prototype.addCurrentExperimentToHistoryList = function() {
+  var self = this;
+  
+  // Creates an array in case history list does not exist
+  historyList = self.getExperimentsHistoryList();
+  historyList[self.deserialize(localStorage.recommendsExperiment)] = true;
+  localStorage.recommendsHistory = JSON.stringify(historyList);
+}
+
+// Adds the current campaign to the historic list of passerbys
+recommends.prototype.isExperimentInHistoryList = function(recommendsExperiment) {
+  
+  // Creates an array in case history list does not exist
+  historyList = self.getExperimentsHistoryList();
+  if(localStorage.recommendsHistory[recommendsExperiment]) {
+    return true;
+    
+  } else {
+    return false;
+    
+  }
+}
+
+recommends.prototype.getExperimentsHistoryList = function() {
+  if(localStorage.recommendsHistory) {
+    return JSON.parse(localStorage.recommendsHistory);
+    
+  } else {
+    return {};    
+  }
+}
+
+// Gets the current campaign key
 recommends.prototype.getCurrentCampaignKey = function() {
   var self = this;
   var allCampaigns = self.getAllCampaigns();
   if(allCampaigns && allCampaigns[self.deserialize(localStorage.recommendsExperiment)]) {
     return self.deserialize(localStorage.recommendsExperiment);
+    
   } else {
     return self.defaultCampaign.key;
   }
 };
 
+// Checks if campaign exist
 recommends.prototype.hasCampaign = function() {
   var self = this;
   var allCampaigns = self.getAllCampaigns();  
   if(allCampaigns && allCampaigns[deserialize(localStorage.recommendsExperiment)]) {
     return true;
+    
   } else {
     return false;
+    
   }
 }
 
@@ -97,8 +147,10 @@ recommends.prototype.getCurrentCampaignHtml = function() {
   var allCampaigns = self.getAllCampaigns();
   if(allCampaigns && allCampaigns[deserialize(localStorage.recommendsExperiment)]) {
     return allCampaigns[deserialize(localStorage.recommendsExperiment)].html;
+    
   } else {
     return self.defaultCampaign.html;
+    
   }
 };
 
@@ -106,8 +158,10 @@ recommends.prototype.getAllCampaigns = function() {
   var self = this;  
   if(localStorage.recommendsCampaigns) {
     return JSON.parse(localStorage.recommendsCampaigns);
+    
   } else {
     return false;
+    
   }
 };
 
