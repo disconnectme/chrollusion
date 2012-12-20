@@ -155,7 +155,11 @@ h2.domain img.tracker {
   border-radius: 5px;
 }
 
-#sidebar-content p:first-child {
+.live-data {
+  font-size: 7pt;
+}
+
+#sidebar-content p:first-child, #sidebar-content h2 {
   margin-top: 0;
 }
 
@@ -176,7 +180,7 @@ ul {
 
 .privacy-policy {
   margin-bottom: 0;
-  font-size: 8pt;
+  font-size: 7pt;
 }
 
 div.settings-menu {
@@ -273,6 +277,11 @@ html.deployment-production #deployment-info {
 
 #update .chrome, #update .safari {
   display: none;
+}
+
+#recommends {
+  border: 1px solid #c5d5dd;
+  background: -webkit-linear-gradient(white, #e6f1f6);
 }
 
 .share {

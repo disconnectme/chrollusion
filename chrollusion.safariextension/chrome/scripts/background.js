@@ -43,7 +43,7 @@ var blacklist = deserialize(localStorage.blacklist) || {};
 var whitelist = deserialize(localStorage.whitelist) || {};
 var tabs = {};
 var log = {};
-var currentBuild = 21;
+var currentBuild = 25;
 var previousBuild = localStorage.build;
 var startTime = new Date();
 var scenes = [1, 2, 3, 4, 5];
@@ -56,8 +56,13 @@ var recommender = new recommends();
 
 if (!previousBuild || previousBuild < 15) localStorage.promoHidden = true;
 if (!previousBuild || previousBuild < 18) localStorage.updateClosed = true;
-if (!previousBuild || previousBuild < currentBuild)
-    localStorage.build = currentBuild;
+
+if (!previousBuild || previousBuild < currentBuild) {
+  delete localStorage.promoHidden;
+  delete localStorage.updateClosed;
+  localStorage.build = currentBuild;
+}
+
 parseInt(localStorage.sidebarCollapsed, 10) &&
     localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
 

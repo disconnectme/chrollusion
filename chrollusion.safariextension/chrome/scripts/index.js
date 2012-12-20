@@ -65,6 +65,10 @@ $(window).ready(function() {
     $("#logo").attr({src: "../images/safari.png", alt: "Collusion for Safari"});
     $("#show-badge").hide();
   } else {
+    if (!deserialize(localStorage.promoHidden)) {
+      localStorage.promoHidden = true;
+      setTimeout(function() { setBadgeText({text: ''}); }, 200);
+    }
     $("#update .chrome").show();
     $("#logo").attr({src: "../images/chrome.png", alt: "Collusion for Chrome"});
   }
@@ -89,9 +93,8 @@ $(window).ready(function() {
   } else {
     $("#block-tracking").addClass("blocked").html("Unblock known tracking sites");
   }
-  updateClosed ?
-      recommendsActivated && recommender.hasCampaign()
-      && $("#recommends").show() : $("#update").show();
+  updateClosed || $("#update").show();
+  recommendsActivated && recommender.hasCampaign() && $("#recommends").show();
 
   // get list of known trackers from trackers.json file hosted on website:
   getJsonNoMatterWhat("../data/trackers.json", function(trackers) {
@@ -100,7 +103,7 @@ $(window).ready(function() {
       height:
           updateClosed ?
               SAFARI ? 597 : recommendsActivated ? 536 : 586 :
-                  SAFARI ? 556 : 548,
+                  SAFARI ? 556 : recommendsActivated ? 489 : 548,
       trackers: trackers,
       hideFavicons: false 
     });
@@ -181,7 +184,6 @@ $(window).ready(function() {
             }
           });
                   
-        deserialize(localStorage.promoHidden) || setBadgeText({text: ''});
         localStorage.updateClosed = true;
         window.location.reload();
       });
