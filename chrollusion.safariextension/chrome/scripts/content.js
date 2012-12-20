@@ -59,13 +59,14 @@ sendRequest({initialized: true}, function(response) {
   var referrerHost = referrerDomain.host;
   var trackingBlocked = response.trackingBlocked;
   var blacklist = response.blacklist;
+  var whitelist = response.whitelist;
 
   document.addEventListener('beforeload', function(event) {
     var domain = getDomain(event.url);
     var name = domain.name;
 
     if (name && name != extensionId && name != referrerName) {
-      if (trackingBlocked && blacklist[name]) {
+      if (trackingBlocked && blacklist[name] && !whitelist[name]) {
         event.preventDefault();
         $(event.target).hide();
       }

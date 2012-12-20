@@ -221,6 +221,8 @@ var GraphRunner = (function(jQuery, d3) {
           .duration(1000)
           .attr("r", function(d) { return radius(d); });
 
+      var whitelist = backgroundPage.whitelist;
+
       // For each node, create svg group <g> to hold circle, image, and title
       var gs = node.enter().append("svg:g")
           .attr("class", "node")
@@ -255,6 +257,14 @@ var GraphRunner = (function(jQuery, d3) {
             d3.selectAll("g.node").classed("unrelated-domain", false);
             d3.select("#domain-label").classed("hidden", true);
             d3.select("#domain-label-text").classed("hidden", true);
+          })
+          .on("click", function(d) {
+            var domain = d.name;
+            var whitelisted = whitelist[domain];
+            if (whitelisted) delete whitelist[domain];
+            else whitelist[domain] = true;
+            localStorage.whitelist = JSON.stringify(whitelist);
+            d3.select(this).select("line").classed("hidden", !whitelisted);
           })
         .call(force.drag);
 
@@ -297,19 +307,17 @@ var GraphRunner = (function(jQuery, d3) {
       }
 
       // Ghostbustersification.
-      if (!trackingUnblocked) {
-        gs.append("svg:line")
-          .attr("x1", "-8")
-          .attr("y1", "-8")
-          .attr("x2", "8")
-          .attr("y2", "8")
-          .attr("class", function(d) {
-            return "node round-border " + getClassForSite(d);
-          })
-          .classed("hidden", function(d) {
-            return d.wasVisited || !d.trackerInfo;
-          });
-      }
+      gs.append("svg:line")
+        .attr("x1", "-8")
+        .attr("y1", "-8")
+        .attr("x2", "8")
+        .attr("y2", "8")
+        .attr("class", function(d) {
+          return "no node round-border " + getClassForSite(d);
+        })
+        .classed("hidden", function(d) {
+          return trackingUnblocked || d.wasVisited || !d.trackerInfo || whitelist[d.name];
+        });
 
       return node;
     }
@@ -422,40 +430,43 @@ var GraphRunner = (function(jQuery, d3) {
       return {
         data: null,
         update: function(json) {
-          this.data = json;
-          drawing.force.stop();
+          query({currentWindow: true, active: true}, function(tabs) {
+            this.data = json;
+            drawing.force.stop();
 
-          for (var name in json) {
-            var domain = json[name];
-            var referrers = domain.referrers;
-            for (var referrerName in referrers)
-              addLink({
-                from: {name: referrerName, host: referrers[referrerName].host},
-                to: {name: name, host: domain.host}
-              });
-          }
-          for (var n = 0; n < nodes.length; n++) {
-            if (json[nodes[n].name]) {
-              nodes[n].wasVisited = json[nodes[n].name].visited;
-            } else {
-              nodes[n].wasVisited = false;
+            for (var name in json) {
+              var domain = json[name];
+              var referrers = domain.referrers;
+              for (var referrerName in referrers)
+                if (!sitesHidden || tabs[0].url.indexOf(referrerName) + 1)
+                  addLink({
+                    from: {name: referrerName, host: referrers[referrerName].host},
+                    to: {name: name, host: domain.host}
+                  });
+            }
+            for (var n = 0; n < nodes.length; n++) {
+              if (json[nodes[n].name]) {
+                nodes[n].wasVisited = json[nodes[n].name].visited;
+              } else {
+                nodes[n].wasVisited = false;
+              }
+
+              /* For nodes that don't already have a position, initialize them near the center.
+               * This way the graph will start from center. If it already has a position, leave it.
+               * Note that initializing them all exactly at center causes there to be zero distance,
+               * which makes the repulsive force explode!! So add some random factor. */
+              if (typeof nodes[n].x == "undefined") {
+                nodes[n].x = nodes[n].px = SVG_WIDTH / 2 - 25 + Math.floor( Math.random() * 50 ) ;
+                nodes[n].y = nodes[n].py = SVG_HEIGHT / 2 - 25 + Math.floor( Math.random() * 50 );
+              }
             }
 
-            /* For nodes that don't already have a position, initialize them near the center.
-             * This way the graph will start from center. If it already has a position, leave it.
-             * Note that initializing them all exactly at center causes there to be zero distance,
-             * which makes the repulsive force explode!! So add some random factor. */
-            if (typeof nodes[n].x == "undefined") {
-              nodes[n].x = nodes[n].px = SVG_WIDTH / 2 - 25 + Math.floor( Math.random() * 50 ) ;
-              nodes[n].y = nodes[n].py = SVG_HEIGHT / 2 - 25 + Math.floor( Math.random() * 50 );
-            }
-          }
-
-          drawing.force.nodes(nodes);
-          drawing.force.links(links);
-          drawing.force.start();
-          createLinks(links);
-          createNodes(nodes, drawing.force);
+            drawing.force.nodes(nodes);
+            drawing.force.links(links);
+            drawing.force.start();
+            createLinks(links);
+            createNodes(nodes, drawing.force);
+          });
         }
       };
     }
