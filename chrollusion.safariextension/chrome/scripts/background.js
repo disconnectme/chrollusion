@@ -39,11 +39,12 @@ var browserAction = chrome.browserAction;
 var setIcon = browserAction.setIcon;
 var setBadgeText = browserAction.setBadgeText;
 var tlds = deserialize(localStorage.tlds) || {};
-var blacklist = deserialize(localStorage.blacklist) || {};
+var services = deserialize(localStorage.services) || {};
 var whitelist = deserialize(localStorage.whitelist) || {};
+var blacklist = deserialize(localStorage.blacklist) || {};
 var tabs = {};
 var log = {};
-var currentBuild = 25;
+var currentBuild = 26;
 var previousBuild = localStorage.build;
 var startTime = new Date();
 var scenes = [1, 2, 3, 4, 5];
@@ -57,9 +58,14 @@ var recommender = new recommends();
 if (!previousBuild || previousBuild < 15) localStorage.promoHidden = true;
 if (!previousBuild || previousBuild < 18) localStorage.updateClosed = true;
 
-if (!previousBuild || previousBuild < currentBuild) {
+if (!previousBuild || previousBuild < 25) {
   delete localStorage.promoHidden;
   delete localStorage.updateClosed;
+}
+
+if (!previousBuild || previousBuild < currentBuild) {
+  delete localStorage.blacklist;
+  blacklist = {};
   localStorage.build = currentBuild;
 }
 
@@ -97,10 +103,10 @@ $.getJSON('../data/tlds.json', function(data) {
 // TODO: This file is already loaded elsewhere.
 $.getJSON('../data/trackers.json', function(data) {
   var siteCount = data.length;
-  var blacklistUpdate = {};
-  for (var i = 0; i < siteCount; i++) blacklistUpdate[data[i].domain] = true;
-  blacklist = blacklistUpdate;
-  localStorage.blacklist = JSON.stringify(blacklist);
+  var servicesUpdate = {};
+  for (var i = 0; i < siteCount; i++) servicesUpdate[data[i].domain] = true;
+  services = servicesUpdate;
+  localStorage.services = JSON.stringify(services);
 });
 
 setIcon({
@@ -145,8 +151,9 @@ extension.onRequest.addListener(function(request, sender, sendResponse) {
         tlds: tlds,
         referrerUrl: tab.url,
         trackingBlocked: !deserialize(localStorage.trackingUnblocked),
-        blacklist: blacklist,
-        whitelist: whitelist
+        services: services,
+        whitelist: whitelist,
+        blacklist: blacklist
       });
   else {
     // The Collusion data structure.

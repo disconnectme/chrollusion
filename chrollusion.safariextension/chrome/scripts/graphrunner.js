@@ -222,6 +222,7 @@ var GraphRunner = (function(jQuery, d3) {
           .attr("r", function(d) { return radius(d); });
 
       var whitelist = backgroundPage.whitelist;
+      var blacklist = backgroundPage.blacklist;
 
       // For each node, create svg group <g> to hold circle, image, and title
       var gs = node.enter().append("svg:g")
@@ -259,12 +260,21 @@ var GraphRunner = (function(jQuery, d3) {
             d3.select("#domain-label-text").classed("hidden", true);
           })
           .on("click", function(d) {
-            var domain = d.name;
-            var whitelisted = whitelist[domain];
-            if (whitelisted) delete whitelist[domain];
-            else whitelist[domain] = true;
-            localStorage.whitelist = JSON.stringify(whitelist);
-            d3.select(this).select("line").classed("hidden", !whitelisted);
+            if (d.trackerInfo) {
+              var domain = d.name;
+              var blocked =
+                  !trackingUnblocked && !whitelist[domain] || blacklist[domain];
+              if (blocked) {
+                whitelist[domain] = true;
+                delete blacklist[domain];
+              } else {
+                delete whitelist[domain];
+                blacklist[domain] = true;
+              }
+              localStorage.whitelist = JSON.stringify(whitelist);
+              localStorage.blacklist = JSON.stringify(blacklist);
+              d3.select(this).select("line").classed("hidden", blocked);
+            }
           })
         .call(force.drag);
 
@@ -316,7 +326,7 @@ var GraphRunner = (function(jQuery, d3) {
           return "no node round-border " + getClassForSite(d);
         })
         .classed("hidden", function(d) {
-          return trackingUnblocked || d.wasVisited || !d.trackerInfo || whitelist[d.name];
+          return (trackingUnblocked || d.wasVisited || !d.trackerInfo || whitelist[d.name]) && !blacklist[d.name];
         });
 
       return node;
