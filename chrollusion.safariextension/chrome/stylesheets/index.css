@@ -162,6 +162,12 @@ h2.domain img.tracker {
 #sidebar-content p:first-child, #sidebar-content h2 {
   margin-top: 0;
 }
+#sidebar-content #domain-infos .info a.tracker {
+  color: #d62728;
+}
+#sidebar-content #domain-infos .info a.tracker.blocked {
+  text-decoration: line-through;
+}
 
 ul {
   padding-left: 20px;

@@ -73,6 +73,7 @@ var GraphRunner = (function(jQuery, d3) {
       target.removeClass("tracker").removeClass("site");
       if (d.trackerInfo) {
         target.addClass("tracker");
+        if (!trackingUnblocked) target.addClass("blocked");
       } else {
         target.addClass("site");
       }
