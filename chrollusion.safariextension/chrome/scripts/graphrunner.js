@@ -73,6 +73,12 @@ var GraphRunner = (function(jQuery, d3) {
       target.removeClass("tracker").removeClass("site");
       if (d.trackerInfo) {
         target.addClass("tracker");
+
+        var domain = d.name;
+        var whitelist = backgroundPage.whitelist;
+        var blacklist = backgroundPage.blacklist;
+        if (!trackingUnblocked && !whitelist[domain] || blacklist[domain])
+          target.addClass("blocked");
       } else {
         target.addClass("site");
       }
@@ -106,6 +112,15 @@ var GraphRunner = (function(jQuery, d3) {
         info.find("h2.domain").prepend(img);
         img.error(function() { img.remove(); });
         $("#domain-infos").append(info);
+      }
+      else {
+        var domain = d.name;
+        var whitelist = backgroundPage.whitelist;
+        var blacklist = backgroundPage.blacklist;
+        if (trackingUnblocked && !blacklist[domain] || whitelist[domain])
+          info.find("h2.domain:first > a.tracker.blocked").removeClass("blocked");
+        else
+          info.find("h2.domain:first > a.tracker").addClass("blocked");
       }
 
       // List referrers, if any (sites that set cookies read by this site)
@@ -262,14 +277,18 @@ var GraphRunner = (function(jQuery, d3) {
           .on("click", function(d) {
             if (d.trackerInfo) {
               var domain = d.name;
+              var className = d.name.replace(/\./g, '-dot-');
+              var header = $("#domain-infos ." + className + " h2.domain:first > a.tracker");
               var blocked =
                   !trackingUnblocked && !whitelist[domain] || blacklist[domain];
               if (blocked) {
                 whitelist[domain] = true;
                 delete blacklist[domain];
+                header.removeClass("blocked");
               } else {
                 delete whitelist[domain];
                 blacklist[domain] = true;
+                header.addClass("blocked");
               }
               localStorage.whitelist = JSON.stringify(whitelist);
               localStorage.blacklist = JSON.stringify(blacklist);
