@@ -1,7 +1,7 @@
 /*
   A background page that aggregates tracking requests.
 
-  Copyright 2012 Disconnect, Inc.
+  Copyright 2012, 2013 Disconnect, Inc.
 
   This program is free software: you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free Software
@@ -44,7 +44,7 @@ var whitelist = deserialize(localStorage.whitelist) || {};
 var blacklist = deserialize(localStorage.blacklist) || {};
 var tabs = {};
 var log = {};
-var currentBuild = 26;
+var currentBuild = 27;
 var previousBuild = localStorage.build;
 var startTime = new Date();
 var scenes = [1, 2, 3, 4, 5];
@@ -63,9 +63,13 @@ if (!previousBuild || previousBuild < 25) {
   delete localStorage.updateClosed;
 }
 
-if (!previousBuild || previousBuild < currentBuild) {
+if (!previousBuild || previousBuild < 26) {
   delete localStorage.blacklist;
   blacklist = {};
+}
+
+if (!previousBuild || previousBuild < currentBuild) {
+  localStorage.updateClosed = true;
   localStorage.build = currentBuild;
 }
 
