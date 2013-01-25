@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Collusion for Chrome",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description":
       "Visualize and, optionally, block the invisible websites that track you.",
   "icons": {"48": "images/48.png", "128": "images/128.png"},
@@ -19,8 +19,8 @@
   ],
   "background": {
     "scripts": [
-      "scripts/vendor/port.js",
-      "scripts/vendor/jquery.min.js",
+      "scripts/vendor/port/port.js",
+      "scripts/vendor/jquery/jquery.js",
       "scripts/analytics.js",
       "scripts/recommends.js",
       "scripts/background.js"
@@ -33,8 +33,8 @@
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
     "js": [
-      "scripts/vendor/port.js",
-      "scripts/vendor/jquery.min.js",
+      "scripts/vendor/port/port.js",
+      "scripts/vendor/jquery/jquery.js",
       "scripts/content.js"
     ],
     "run_at": "document_start",

@@ -44,7 +44,7 @@ var whitelist = deserialize(localStorage.whitelist) || {};
 var blacklist = deserialize(localStorage.blacklist) || {};
 var tabs = {};
 var log = {};
-var currentBuild = 27;
+var currentBuild = 28;
 var previousBuild = localStorage.build;
 var startTime = new Date();
 var scenes = [1, 2, 3, 4, 5];
@@ -68,11 +68,9 @@ if (!previousBuild || previousBuild < 26) {
   blacklist = {};
 }
 
-if (!previousBuild || previousBuild < currentBuild) {
-  localStorage.updateClosed = true;
-  localStorage.build = currentBuild;
-}
-
+if (!previousBuild || previousBuild < 27) localStorage.updateClosed = true;
+if (!previousBuild || previousBuild < currentBuild)
+    localStorage.build = currentBuild;
 parseInt(localStorage.sidebarCollapsed, 10) &&
     localStorage.sidebarCollapsed--; // An experimental "semisticky" bit.
 

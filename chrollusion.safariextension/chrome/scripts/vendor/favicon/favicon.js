@@ -3,20 +3,13 @@
  * a browser extension, that allows cross-origin requests.
  * <br />
  * <br />
- * Copyright 2012 Disconnect, Inc.
+ * Copyright 2012, 2013 Disconnect, Inc.
  * <br />
  * <br />
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * <br />
- * <br />
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the <a
- * href="https://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
- * for more details.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at <a
+ * href="https://mozilla.org/MPL/2.0/">https://mozilla.org/MPL/2.0/</a>.
  * <br />
  * @constructor
  * @param {string} [alt] A default favicon URL, absolute or relative.
@@ -87,7 +80,7 @@ function Favicon(alt) {
     return this;
   };
 
-  var version = '1.1.1';
+  var version = '1.3.0';
   var protocols = ['http://'];
   var subdomains = ['', 'www.'];
   var paths = ['/favicon.ico'];
@@ -100,7 +93,7 @@ function Favicon(alt) {
   if (typeof jQuery == undeclared) {
     var script = document.createElement('script');
     script.setAttribute('type', 'text/javascript');
-    script.setAttribute('src', 'vendor/jquery-1.7.2.min.js');
+    script.setAttribute('src', 'vendor/jquery/jquery.js');
     script.onload = function() { jQuery.noConflict(); };
     document.head.appendChild(script);
   }
