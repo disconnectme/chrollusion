@@ -68,7 +68,8 @@ if (!previousBuild || previousBuild < 26) {
   blacklist = {};
 }
 
-if (!previousBuild || previousBuild < 27) localStorage.updateClosed = true;
+if (!previousBuild || previousBuild < 27)
+    if (!SAFARI) localStorage.updateClosed = true;
 if (!previousBuild || previousBuild < currentBuild)
     localStorage.build = currentBuild;
 parseInt(localStorage.sidebarCollapsed, 10) &&
