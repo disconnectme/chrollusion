@@ -13,15 +13,15 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3.1</string>
+	<string>2.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>6</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Database Quota</key>
 		<real>104857600</real>
 		<key>Global Page</key>
-		<string>chrome/markup/background.html</string>
+		<string>background.html</string>
 		<key>Popovers</key>
 		<array>
 			<dict>
@@ -57,14 +57,14 @@
 		<dict>
 			<key>Start</key>
 			<array>
-				<string>chrome/scripts/vendor/port.js</string>
-				<string>chrome/scripts/vendor/jquery.min.js</string>
+				<string>chrome/scripts/vendor/port/port.js</string>
+				<string>chrome/scripts/vendor/jquery/jquery.js</string>
 				<string>chrome/scripts/content.js</string>
 			</array>
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Visualize the invisible websites that track you.</string>
+	<string>Visualize and, optionally, block the invisible websites that track you.</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>
