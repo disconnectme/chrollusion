@@ -102,7 +102,7 @@ $(window).ready(function() {
       width: sidebarCollapsed ? SAFARI ? 791 : 794 : SAFARI ? 576 : 575,
       height:
           updateClosed ?
-              (SAFARI ? 597 : recommendsActivated ? 536 : 586) :
+              (SAFARI ? 597 : (recommendsActivated ? 536 : 586)) :
                   SAFARI ? 556 : recommendsActivated ? 489 : 548,
       trackers: trackers,
       hideFavicons: false 
