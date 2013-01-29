@@ -4,6 +4,56 @@
 Collusion for Chrome and Collusion for Safari let you visualize and, optionally,
 block the invisible websites that track you.
 
+--- January 28, 2013 -----------------------------------------------------------
+
+                                  v2.2 (Chrome)
+                                  v2.0 (Safari)
+
+* Reorganizes vendor code.
+* Brings the Safari port to parity.
+
+--- January 18, 2013 -----------------------------------------------------------
+
+                                  v2.1 (Chrome)
+
+* Styles site info cards.
+
+--- December 19, 2012 ----------------------------------------------------------
+
+                                  v2.0 (Chrome)
+
+* Hides inactive sites in the graph (click the sidebar button to hide).
+* Blocks or unblocks tracking sites on click (click the red graph nodes to block
+  or unblock).
+* Adds recommendations.
+* Migrates to the v2 manifest file.
+
+--- October 15, 2012 -----------------------------------------------------------
+
+                                 v1.10 (Chrome)
+
+* Refactors client code.
+
+--- September 14, 2012 ---------------------------------------------------------
+
+                                  v1.9 (Chrome)
+
+* Stops the recommendation experiment.
+
+--- September 2, 2012 ----------------------------------------------------------
+
+                                  v1.8 (Chrome)
+
+* Updates descriptive copy.
+* Starts an experiment on complimentary product, service, and cause
+  recommendations.
+
+--- July 16, 2012 --------------------------------------------------------------
+
+                                 v1.3.1 (Safari)
+
+* Patches pinwheeling (infinite recursion) on tab creation.
+
 --- June 30, 2012 --------------------------------------------------------------
 
                                   v1.7 (Chrome)
