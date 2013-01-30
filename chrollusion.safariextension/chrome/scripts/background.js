@@ -227,34 +227,3 @@ extension.onRequest.addListener(function(request, sender, sendResponse) {
     sendResponse({});
   }
 });
-
-// Sends data on how long the display in seconds is open back home  
-chrome.extension.onConnect.addListener(function(port) {
-  //Do not track
-  if (!deserialize(localStorage.recommendsExperiment) || deserialize(localStorage.recommendsClosed)) {
-    return;
-  }
-  
-  // Popup opened for the first time	
-  if (!localStorage['chrollusion_first_time']) {
-    localStorage['chrollusion_first_time'] = '1';
-    atr.triggerEvent('chrollusion opened for first time', {'on': new Date()});
-  }
-  
-  // Popup opened time
-  var averageTime, openedTime, closedTime;
-  
-  // Opened Time
-  openedTime = new Date();
-  
-  port.onDisconnect.addListener(function(e) {
-    // Closed Time
-    closedTime = new Date();
-    // Popup average time opened in seconds
-    averageTime = (closedTime - openedTime) / 1000;
-    
-    // Popup closed time
-    atr.triggerEvent('chrollusion popup opened', {'averageTime': averageTime});
-    atr.triggerEvent('chrollusion recommends viewed', {averageTime: averageTime});
-  });
-});

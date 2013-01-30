@@ -204,5 +204,3 @@ $(window).ready(function() {
     }
   });
 });
-
-chrome.extension.connect();
