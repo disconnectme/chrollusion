@@ -44,9 +44,10 @@ var whitelist = deserialize(localStorage.whitelist) || {};
 var blacklist = deserialize(localStorage.blacklist) || {};
 var tabs = {};
 var log = {};
-var currentBuild = 28;
+var playback = [];
+var currentBuild = 29;
 var previousBuild = localStorage.build;
-var startTime = new Date();
+var startTime;
 var scenes = [1, 2, 3, 4, 5];
 var currentScene = getScene();
 var frameCount = 7;
@@ -149,16 +150,17 @@ extension.onRequest.addListener(function(request, sender, sendResponse) {
     return;
   }
   
-  if (request.initialized)
-      sendResponse({
-        tlds: tlds,
-        referrerUrl: tab.url,
-        trackingBlocked: !deserialize(localStorage.trackingUnblocked),
-        services: services,
-        whitelist: whitelist,
-        blacklist: blacklist
-      });
-  else {
+  if (request.initialized) {
+    if (!startTime) startTime = new Date();
+    sendResponse({
+      tlds: tlds,
+      referrerUrl: tab.url,
+      trackingBlocked: !deserialize(localStorage.trackingUnblocked),
+      services: services,
+      whitelist: whitelist,
+      blacklist: blacklist
+    });
+  } else {
     // The Collusion data structure.
     var domain = request.domain;
     var domainName = domain.name;
@@ -173,15 +175,19 @@ extension.onRequest.addListener(function(request, sender, sendResponse) {
     log[referrerName].visited = true;
 
     var referrers = log[domainName].referrers;
+    var elapsedTime = new Date() - startTime;
     if (!(referrerName in referrers))
         referrers[referrerName] = {
           host: referrerHost,
-          types: [new Date() - startTime]
+          types: [elapsedTime]
         };
 
     var types = referrers[referrerName].types;
     var type = request.type;
     types.indexOf(type) == -1 && types.push(type);
+
+    // For art.
+    playback.push({time: elapsedTime, domain: domainName});
 
     // A live update.
     var popup = extension.getViews({type: 'popup'})[0];
