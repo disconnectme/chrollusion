@@ -1,7 +1,7 @@
-# Collusion for Chrome (and Safari!)
+# Collusion for Chrome (and Safari<em>!</em>)
 
 Collusion for Chrome is a browser extension that lets you visualize and,
-optionally, block the invisible websites tracking you.
+optionally, block the otherwise invisible websites tracking you.
 
 You might fancy [watching a demo](https://www.youtube.com/watch?v=zP79Iwm0xbA)
 or [trying the extension](https://disconnect.me/collusion).
@@ -51,7 +51,7 @@ These libraries are bundled with the project and needn’t be updated manually:
 
 ## License
 
-Copyright 2012 Disconnect, Inc.
+Copyright 2012, 2013 Disconnect, Inc.
 
 This program, including portions developed by Mozilla ([see their
 license](https://github.com/toolness/collusion/blob/master/README.md)), is free
